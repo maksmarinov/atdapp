@@ -1,0 +1,83 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var (--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.cow {
+  margin-top: 4rem;
+  filter: drop-shadow(0 0 3px rgb(13, 148, 24)); 
+  transition: transform 1s ease; 
+}
+
+.signup-button {
+  margin-left: -10px;
+  font-size: x-large;
+  position: relative;
+  padding: 0.75rem 1.5rem; 
+  border-radius: 0.375rem;
+  font-weight: bold; 
+  border-width: 2px;
+  border-color: #0a5f07;
+  color: white; 
+  cursor: pointer; 
+  z-index: 1; 
+}
+
+.glow-div {
+  position: absolute;
+  top: 420%; 
+  left: 50%; 
+  transform: translateX(-50%);
+  width: 200%; 
+  height: 120%; 
+  background-color: #22c55e; 
+  opacity: 0; 
+  filter: blur(20px); 
+  border-radius: 150%; 
+  z-index: 0; 
+  transition: opacity 1.5s ease;
+}
+
+.signup-button:hover .glow-div {
+  opacity: 0.4; 
+}
+
+
+
+.relative a:hover ~ .mt-5 .cow {
+  transition: 1.7s;
+  transform: translate(0%, -90%); 
+}
+.input-field {
+  opacity: 95%;
+  padding: 0.125rem;
+  border-radius: 0.125rem;
+  border-width: 1px;
+  border-color: rgb(3, 44, 20);
+  background-color: rgb(28, 44, 35);
+  color: rgb(221, 221, 221);
+  font-weight: 300;
+  margin-bottom: 1.5rem;
+}
