@@ -1,8 +1,8 @@
+"use client";
 import Link from "next/link";
 import { mockFetch } from "../../utils/mockFetch";
 
-export default async function SigninPage() {
-  const data = await mockFetch("", 1000);
+export default function SigninPage() {
   return (
     <div className="flex h-200 w-full items-center justify-start flex-col pt-50">
       <div className=" mb-4 flex flex-row">
