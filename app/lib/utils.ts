@@ -16,20 +16,20 @@ export const getCurrentUser = cache(async () => {
     return null;
   }
   try {
-    if (!session.userId) {
+    if (!session.id) {
       console.error("Session found, but user identifier is missing.");
       return null;
     }
 
     const user = await prisma.User.id.findUnique({
       where: {
-        id: session.userId,
+        id: session.id,
       },
     });
 
     return user;
   } catch (error) {
-    console.error(`Error getting current user(${session.userId}):`, error);
+    console.error(`Error getting current user(${session.id}):`, error);
 
     return null;
   }

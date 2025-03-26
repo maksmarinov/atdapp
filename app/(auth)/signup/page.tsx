@@ -3,7 +3,7 @@ import "../../globals.css";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
-import { signupUser } from "../../actions/authenticate";
+import { signUp } from "../../actions/authenticate";
 
 export default function SignupPage() {
   const router = useRouter();
@@ -14,7 +14,7 @@ export default function SignupPage() {
     const form = event.currentTarget as HTMLFormElement;
     const userData = new FormData(form);
 
-    const result = await signupUser(userData);
+    const result = await signUp(userData);
 
     if (result?.error) {
       toast.error(result.error);

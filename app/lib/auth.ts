@@ -8,7 +8,7 @@ import * as jose from "jose";
 
 const prisma = new PrismaClient();
 interface JWTPayload {
-  userId: string;
+  id: string;
   [key: string]: string | number | boolean | null | undefined;
 }
 
@@ -78,9 +78,9 @@ export async function refreshToken(token: string): Promise<boolean> {
     return false;
   }
 }
-export async function createSession(userId: string) {
+export async function createSession(id: string) {
   try {
-    const token = await generateJWT({ userId });
+    const token = await generateJWT({ id });
 
     const cookieStore = await cookies();
     cookieStore.set({
@@ -106,7 +106,7 @@ export const getSession = cache(async () => {
 
     if (!token) return null;
     const payload = await verifyJWT(token);
-    return payload ? { userId: payload.userId } : null;
+    return payload ? { id: payload.id } : null;
   } catch (error) {
     if (
       error instanceof Error &&
