@@ -1,10 +1,6 @@
 import { getSession } from "./auth";
 import { cache } from "react";
-// import { unstable_cacheTag as cacheTag } from "next/cache";
-import { PrismaClient } from "@prisma/client/extension";
-import { User } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import prisma from "./prisma";
 
 export const getCurrentUser = cache(async () => {
   const session = await getSession();
@@ -16,54 +12,37 @@ export const getCurrentUser = cache(async () => {
     return null;
   }
   try {
-    if (!session.id) {
+    if (!session.username) {
       console.error("Session found, but user identifier is missing.");
       return null;
     }
 
-    const user = await prisma.User.id.findUnique({
+    const user = await prisma.user.findUnique({
       where: {
-        id: session.id,
+        username: session.username,
       },
     });
 
     return user;
   } catch (error) {
-    console.error(`Error getting current user(${session.id}):`, error);
-
+    console.error("Error getting user by ID:", error);
     return null;
   }
 });
 
-export const getUserByEmail = cache(
-  async (email: string): Promise<User | null> => {
-    if (!email) {
-      console.log("getUserByEmail called with empty email.");
-      return null;
-    }
-
-    try {
-      console.log(`Workspaceing user with email: ${email}`);
-
-      const user = await prisma.user.findUnique({
-        where: {
-          email: email,
-        },
-      });
-
-      if (!user) {
-        console.log(`User not found with email: ${email}`);
-        return null;
-      }
-
-      console.log(`User found: ${user.id}`);
-      return user;
-    } catch (error) {
-      console.error(`Error fetching user by email (${email}):`, error);
-      return null;
-    }
+export const getUserByEmail = cache(async (email: string) => {
+  try {
+    const result = await prisma.user.findUnique({
+      where: {
+        email: email,
+      },
+    });
+    return result;
+  } catch (error) {
+    console.error("Error getting user by email:", error);
+    return null;
   }
-);
+});
 
 export const mockFetch = <T>(data: T, delay: number): Promise<T> => {
   return new Promise((resolve) => {
@@ -81,9 +60,10 @@ export function slugify(text: string) {
     .toString()
     .toLowerCase()
     .trim()
-    .replace(/\s+/g, "-") // Replace spaces with -
-    .replace(/[^\w-]+/g, "") // Remove all non-word chars
-    .replace(/--+/g, "-") // Replace multiple - with single -
-    .replace(/^-+/, "") // Trim - from start of text
-    .replace(/-+$/, ""); // Trim - from end of text
+    .replace(/\s+/g, "-")
+    .replace(/&/g, "-and-")
+    .replace(/[^\w\-]+/g, "")
+    .replace(/\-\-+/g, "-")
+    .replace(/^-+/, "")
+    .replace(/-+$/, "");
 }

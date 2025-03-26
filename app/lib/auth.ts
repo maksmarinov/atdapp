@@ -1,14 +1,12 @@
 import { compare, hash } from "bcrypt";
 
-import { PrismaClient } from "@prisma/client";
 import { cookies } from "next/headers";
-
 import { cache } from "react";
 import * as jose from "jose";
+import prisma from "./prisma";
 
-const prisma = new PrismaClient();
 interface JWTPayload {
-  id: string;
+  username: string;
   [key: string]: string | number | boolean | null | undefined;
 }
 
@@ -35,7 +33,7 @@ export async function createUser(
   const hashedPassword = await hashPassword(password);
 
   try {
-    await prisma.user.create({
+    const user = await prisma.user.create({
       data: {
         email: email,
         password: hashedPassword,
@@ -43,7 +41,7 @@ export async function createUser(
         name: name,
       },
     });
-    return { username, email };
+    return { username: user.username, email: user.email };
   } catch (error) {
     console.error("Error creating user:", error);
     return null;
@@ -78,9 +76,9 @@ export async function refreshToken(token: string): Promise<boolean> {
     return false;
   }
 }
-export async function createSession(id: string) {
+export async function createSession(username: string) {
   try {
-    const token = await generateJWT({ id });
+    const token = await generateJWT({ username });
 
     const cookieStore = await cookies();
     cookieStore.set({
@@ -106,7 +104,7 @@ export const getSession = cache(async () => {
 
     if (!token) return null;
     const payload = await verifyJWT(token);
-    return payload ? { id: payload.id } : null;
+    return payload ? { username: payload.username } : null;
   } catch (error) {
     if (
       error instanceof Error &&

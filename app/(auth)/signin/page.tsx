@@ -1,8 +1,26 @@
 "use client";
 import Link from "next/link";
-import { mockFetch } from "../../utils/mockFetch";
+import { signIn } from "@/app/actions/authenticate";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 export default function SigninPage() {
+  const router = useRouter();
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+
+    const form = event.currentTarget as HTMLFormElement;
+    const userData = new FormData(form);
+
+    const result = await signIn(userData);
+
+    if (result?.error) {
+      toast.error(result.error);
+    } else {
+      toast.success("Sign in successful!");
+      router.push("/dashboard");
+    }
+  };
   return (
     <div className="flex h-200 w-full items-center justify-start flex-col pt-50">
       <div className=" mb-4 flex flex-row">
@@ -12,13 +30,17 @@ export default function SigninPage() {
         <div className="border-b-2 mx-2.5">SIGN IN</div>
       </div>
 
-      <form className="flex flex-col border-2 rounded-xl border-emerald-900 p-4">
-        Username
+      <form
+        onSubmit={handleSubmit}
+        className="flex flex-col border-2 rounded-xl border-emerald-900 p-4"
+      >
+        Email
         <input
           className="input-field"
-          type="text"
-          name="username"
-          id="username"
+          type="email"
+          name="email"
+          id="email"
+          required
         />
         Password
         <input

@@ -90,11 +90,10 @@ export default function SignupPage() {
         <div className="flex-grow border-t border-gray-300"></div>
       </div>
       <button
-        type="button" // Important: type="button" prevents form submission
+        type="button"
         className="mt-4 w-full flex items-center justify-center gap-2 font-semibold border-2 border-gray-300 bg-white text-gray-700 py-2 px-4 rounded hover:bg-gray-100 cursor-pointer transition duration-150 ease-in-out" // Google-like button styling
       >
         {" "}
-        {/* <img src="/path/to/google-icon.svg" alt="Google icon" className="h-5 w-5"/> */}
         <svg
           className="h-5 w-5"
           viewBox="0 0 24 24"

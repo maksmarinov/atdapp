@@ -9,7 +9,7 @@ import {
 } from "../lib/auth";
 import { getUserByEmail } from "../lib/utils";
 
-export const SignUpSchema = z
+const SignUpSchema = z
   .object({
     email: z.string().email({ message: "Invalid email address" }),
     password: z
@@ -23,9 +23,9 @@ export const SignUpSchema = z
     message: "Password don't match",
     path: ["password2"],
   });
-export const SignInSchema = z.object({
+const SignInSchema = z.object({
   password: z.string().min(8, { message: "Please enter your password" }),
-  username: z.string().min(1, { message: "Please enter your username" }),
+  email: z.string().min(1, { message: "Please enter your email" }),
 });
 
 export type signUpSchema = z.infer<typeof SignUpSchema>;
@@ -72,7 +72,7 @@ export async function signIn(formData: FormData): Promise<ActionResponse> {
         },
       };
     }
-    await createSession(user.id.toString());
+    await createSession(user.username);
     return {
       success: true,
       message: "Signed in successfully",
@@ -94,10 +94,9 @@ export async function signUp(formData: FormData): Promise<ActionResponse> {
       name: formData.get("name") as string,
       email: formData.get("email") as string,
       password: formData.get("password") as string,
-      confirmPassword: formData.get("confirmPassword") as string,
+      password2: formData.get("password2") as string,
     };
 
-    // Validate with Zod
     const validationResult = SignUpSchema.safeParse(data);
     if (!validationResult.success) {
       return {
@@ -107,7 +106,6 @@ export async function signUp(formData: FormData): Promise<ActionResponse> {
       };
     }
 
-    // Check if user already exists
     const existingUser = await getUserByEmail(data.email);
     if (existingUser) {
       return {
@@ -134,7 +132,6 @@ export async function signUp(formData: FormData): Promise<ActionResponse> {
       };
     }
 
-    // Create session for the newly registered user
     await createSession(user.username);
 
     return {
