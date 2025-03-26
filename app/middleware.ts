@@ -1,19 +1,39 @@
+import { createServerClient } from "@supabase/ssr";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-export function middleware(request: NextRequest) {
-  if (request.nextUrl.pathname.startsWith("/api")) {
-    const authHeader = request.headers.get("Authorization");
-    if (!authHeader) {
-      return NextResponse.json(
-        { success: false, message: "Authorization header is required" },
-        { status: 401 }
-      );
+export async function middleware(req: NextRequest) {
+  const res = NextResponse.next();
+
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return req.cookies.getAll().map((cookie) => ({
+            name: cookie.name,
+            value: cookie.value,
+          }));
+        },
+        setAll(cookiesList) {
+          cookiesList.forEach((cookie) => {
+            res.cookies.set({
+              name: cookie.name,
+              value: cookie.value,
+              ...cookie.options,
+            });
+          });
+        },
+      },
     }
-  }
-  return NextResponse.next();
+  );
+
+  await supabase.auth.getSession();
+
+  return res;
 }
 
 export const config = {
-  matcher: "/api/:path*",
+  matcher: ["/((?!_next/static|_next/image|favicon.ico|auth/callback).*)"],
 };
