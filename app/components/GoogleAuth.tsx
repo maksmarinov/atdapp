@@ -18,7 +18,13 @@ export default function GoogleAuth({ mode, className = "" }: GoogleAuthProps) {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: `${window.location.origin}/auth/callback`,
+          redirectTo: `${
+            window.location.origin
+          }/auth/callback?redirectPath=${encodeURIComponent("/dashboard")}`,
+          queryParams: {
+            access_type: "offline",
+            prompt: mode === "signup" ? "select_account consent" : undefined,
+          },
         },
       });
 
@@ -60,7 +66,7 @@ export default function GoogleAuth({ mode, className = "" }: GoogleAuthProps) {
         />
         <path d="M1 1h22v22H1z" fill="none" />
       </svg>
-      {mode === "signin" ? "Sign in" : "Sign up"}
+      {mode === "signin" ? "Sign in" : "Sign up"} with Google
     </button>
   );
 }
