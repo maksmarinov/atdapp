@@ -21,42 +21,23 @@ export default function GoogleAuth({ mode, className = "" }: GoogleAuthProps) {
     try {
       setIsLoading(true);
       setError(null);
-      console.log(`Starting Google ${mode} flow`);
-      console.log(`SUPABASE URL: ${process.env.NEXT_PUBLIC_SUPABASE_URL}`);
 
-      // Define query parameters correctly
-      const queryParams: Record<string, string> = {
-        access_type: "offline",
-      };
-
-      // Only add prompt for signup mode
-      if (mode === "signup") {
-        queryParams.prompt = "select_account";
-      }
-
-      const redirectTo = `${
-        window.location.origin
-      }/auth/callback?redirectPath=${encodeURIComponent(
-        "/dashboard"
-      )}&mode=${mode}`;
-      console.log(`Redirect URL: ${redirectTo}`);
-
-      const { data, error } = await supabase.auth.signInWithOAuth({
+      const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo,
-          queryParams,
+          redirectTo: `${window.location.origin}/auth/callback`,
+          queryParams: {
+            access_type: "offline",
+            prompt: mode === "signup" ? "select_account" : undefined,
+          },
         },
       });
 
       if (error) {
         console.error("Google auth error:", error);
         setError(error.message);
-        throw error;
+        setIsLoading(false);
       }
-
-      console.log("Auth response:", data);
-      // The page will redirect, so we don't need to handle success here
     } catch (error) {
       console.error("Error with Google authentication:", error);
       setError(error.message || "Authentication failed");
