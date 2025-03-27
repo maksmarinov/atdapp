@@ -28,20 +28,19 @@ export default function GoogleAuth({ mode, className = "" }: GoogleAuthProps) {
           redirectTo: `${window.location.origin}/auth/callback`,
           queryParams: {
             access_type: "offline",
-            // Force consent screen to appear every time
-            prompt: "consent select_account",
+            prompt: "select_account",
           },
         },
       });
 
       if (error) {
-        console.error("Google auth error:", error);
         setError(error.message);
         setIsLoading(false);
       }
     } catch (error) {
-      console.error("Error with Google authentication:", error);
-      setError(error.message || "Authentication failed");
+      setError(
+        error instanceof Error ? error.message : "Authentication failed"
+      );
       setIsLoading(false);
     }
   };

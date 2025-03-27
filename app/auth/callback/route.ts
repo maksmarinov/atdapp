@@ -5,25 +5,14 @@ import prisma from "@/app/lib/prisma";
 import { createSession } from "@/app/lib/auth";
 
 export async function GET(request: NextRequest) {
-  console.log("Auth callback triggered");
   const requestUrl = new URL(request.url);
   const code = requestUrl.searchParams.get("code");
 
-  // Diagnostic logging
-  console.log(
-    "DATABASE_URL environment variable:",
-    process.env.DATABASE_URL
-      ? `${process.env.DATABASE_URL.substring(0, 15)}...`
-      : "Not set"
-  );
-
   if (!code) {
-    console.error("No code provided in callback");
     return NextResponse.redirect(new URL("/signin?error=no_code", request.url));
   }
 
   try {
-    // Initialize Supabase client
     const supabase = createServerClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -50,61 +39,38 @@ export async function GET(request: NextRequest) {
       }
     );
 
-    // Exchange code for session
-    console.log("Exchanging code for session...");
     const { error: sessionError } = await supabase.auth.exchangeCodeForSession(
       code
     );
 
     if (sessionError) {
-      console.error("Session exchange error:", sessionError);
       return NextResponse.redirect(
-        new URL(
-          `/signin?error=session_exchange&message=${encodeURIComponent(
-            sessionError.message
-          )}`,
-          request.url
-        )
+        new URL(`/signin?error=session_exchange`, request.url)
       );
     }
 
-    // Get authenticated user
     const {
       data: { user },
       error: userError,
     } = await supabase.auth.getUser();
 
     if (userError || !user) {
-      console.error("User fetch error:", userError || "No user returned");
       return NextResponse.redirect(
-        new URL(
-          `/signin?error=user_fetch&message=${userError?.message || "No user"}`,
-          request.url
-        )
+        new URL(`/signin?error=user_fetch`, request.url)
       );
     }
 
-    console.log("User authenticated:", user.email);
-
     try {
-      console.log("Checking for existing user with email:", user.email);
       const existingUser = await prisma.user.findUnique({
         where: { email: user.email },
       });
 
       if (existingUser) {
-        console.log("Existing user found:", existingUser.username);
         await createSession(existingUser.username);
-        return NextResponse.redirect(new URL("/dashboard", request.url));
       } else {
-        console.log("Creating new user");
-        const username =
-          user.user_metadata?.preferred_username ||
-          user.user_metadata?.name?.replace(/\s+/g, "").toLowerCase() ||
-          user.email.split("@")[0];
-
-        const name =
-          user.user_metadata?.full_name || user.user_metadata?.name || username;
+        // Create new user
+        const username = user.email.split("@")[0];
+        const name = user.user_metadata?.name || username;
 
         const newUser = await prisma.user.create({
           data: {
@@ -117,28 +83,16 @@ export async function GET(request: NextRequest) {
           },
         });
 
-        console.log("User created:", newUser.username);
         await createSession(newUser.username);
-        return NextResponse.redirect(new URL("/dashboard", request.url));
       }
-    } catch (dbError) {
-      console.error("Database operation error:", dbError);
+
+      return NextResponse.redirect(new URL("/dashboard", request.url));
+    } catch {
       return NextResponse.redirect(
-        new URL(
-          `/signin?error=database&message=${encodeURIComponent(
-            String(dbError)
-          )}`,
-          request.url
-        )
+        new URL(`/signin?error=database`, request.url)
       );
     }
-  } catch (error) {
-    console.error("General error in OAuth callback:", error);
-    return NextResponse.redirect(
-      new URL(
-        `/signin?error=general&message=${encodeURIComponent(String(error))}`,
-        request.url
-      )
-    );
+  } catch {
+    return NextResponse.redirect(new URL(`/signin?error=general`, request.url));
   }
 }
