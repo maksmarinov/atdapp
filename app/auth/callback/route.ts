@@ -87,19 +87,20 @@ export async function GET(request: NextRequest) {
     console.log("User authenticated:", user.email);
 
     try {
-      // Create a direct Prisma instance with explicit connection URL as a fallback
-      // This is a workaround for Vercel environment variable issues
+      // Use connection pooling URL
+      const pooledDbUrl =
+        "postgresql://postgres.jkcymhzpgcavyakojcvr:slamdunk@aws-0-us-west-1.pooler.supabase.com:6543/postgres";
+
+      console.log("Using pooled connection URL for database access");
       const directPrisma = new PrismaClient({
         datasources: {
           db: {
-            url:
-              process.env.DATABASE_URL ||
-              "postgresql://prisma:slamdunk@db.jkcymhzpgcavyakojcvr.supabase.co:5432/postgres",
+            url: pooledDbUrl,
           },
         },
       });
 
-      // Use explicit connection for database operations
+      // Rest of your code remains the same
       console.log("Checking for existing user with email:", user.email);
       const existingUser = await directPrisma.user.findUnique({
         where: { email: user.email },
