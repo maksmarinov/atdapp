@@ -1,36 +1,65 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+ATDApp - Next.js Application
+⚠️ IMPORTANT WARNING: Google OAuth authentication only works in local development environment. Vercel deployment currently cannot reach the database tables for user creation. Use local development setup for full functionality.
 
-## Getting Started
+Project Overview
+ATDApp is a Next.js application that provides authentication using both traditional email/password and Google OAuth. It integrates with Supabase for authentication and database storage.
 
-First, run the development server:
+Features
+Email/Password authentication
+Google OAuth integration
+User profile management
+Dashboard interface
+Responsive design
+Tech Stack
+Frontend: Next.js 14 with App Router
+Authentication: Supabase Auth
+Database: PostgreSQL via Supabase
+ORM: Prisma
+Styling: Tailwind CSS
+Local Development Setup
+Clone the repository:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Install dependencies:
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Set up environment variables: Create a .env file in the root directory with the following variables:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Note: Never commit your actual environment values to version control. Contact the project maintainer for the correct values.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Generate Prisma client:
 
-## Learn More
+Run the development server:
 
-To learn more about Next.js, take a look at the following resources:
+Access the application: Open http://localhost:3000 in your browser.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Known Issues
+Vercel Deployment: Google authentication works partially on Vercel - users are created in Supabase Auth but not in the database tables. This is due to connection restrictions between Vercel and the database.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Workaround: For testing the complete authentication flow, use the local development setup.
 
-## Deploy on Vercel
+Database Configuration
+The application uses Prisma ORM to interact with a PostgreSQL database hosted on Supabase.
+Database schema includes tables for users, profiles, and sessions.
+Authentication Flow
+There are two authentication methods available:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Email/Password Authentication
+User enters email and password on the sign-in or sign-up page
+Credentials are verified against the database
+On successful verification, a JWT session is established
+For new users, a record is created in the database
+Google OAuth Authentication
+User initiates Google authentication by clicking the Google button
+Supabase handles the OAuth flow with Google
+Upon successful OAuth, the callback route creates/updates user record in database
+JWT session is established for authenticated users
+Troubleshooting
+If you encounter issues with authentication:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Check that all environment variables are correctly set
+Ensure Supabase project has the correct redirect URLs configured
+Verify Google OAuth credentials are properly set up
+Check database connection permissions in Supabase settings
+Contributing
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+This project was bootstrapped with create-next-app and uses the Next.js App Router.
