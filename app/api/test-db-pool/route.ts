@@ -4,7 +4,7 @@ import { PrismaClient } from "@prisma/client";
 export async function GET() {
   try {
     const pooledDbUrl =
-      "postgresql://postgres.jkcymhzpgcavyakojcvr:YOUR_EXACT_PASSWORD@aws-0-us-west-1.pooler.supabase.com:6543/postgres";
+      "postgresql://postgres.jkcymhzpgcavyakojcvr:slamdunk@aws-0-us-west-1.pooler.supabase.com:6543/postgres";
 
     const testPrisma = new PrismaClient({
       datasources: {
