@@ -1,13 +1,22 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
-import prisma from "@/app/lib/prisma";
+// import prisma from "@/app/lib/prisma";
 import { createSession } from "@/app/lib/auth";
+import { PrismaClient } from "@prisma/client";
 
 export async function GET(request: NextRequest) {
   console.log("Auth callback triggered");
   const requestUrl = new URL(request.url);
   const code = requestUrl.searchParams.get("code");
+
+  // Diagnostic logging
+  console.log(
+    "DATABASE_URL environment variable:",
+    process.env.DATABASE_URL
+      ? `${process.env.DATABASE_URL.substring(0, 15)}...`
+      : "Not set"
+  );
 
   if (!code) {
     console.error("No code provided in callback");
@@ -15,6 +24,7 @@ export async function GET(request: NextRequest) {
   }
 
   try {
+    // Initialize Supabase client
     const supabase = createServerClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -41,7 +51,7 @@ export async function GET(request: NextRequest) {
       }
     );
 
-    console.log("Exchanging code for session...");
+    // Exchange code for session
     const { error: sessionError } = await supabase.auth.exchangeCodeForSession(
       code
     );
@@ -49,11 +59,16 @@ export async function GET(request: NextRequest) {
     if (sessionError) {
       console.error("Session exchange error:", sessionError);
       return NextResponse.redirect(
-        new URL("/signin?error=session_exchange", request.url)
+        new URL(
+          `/signin?error=session_exchange&message=${encodeURIComponent(
+            sessionError.message
+          )}`,
+          request.url
+        )
       );
     }
 
-    console.log("Getting user info...");
+    // Get authenticated user
     const {
       data: { user },
       error: userError,
@@ -62,23 +77,41 @@ export async function GET(request: NextRequest) {
     if (userError || !user) {
       console.error("User fetch error:", userError || "No user returned");
       return NextResponse.redirect(
-        new URL("/signin?error=user_fetch", request.url)
+        new URL(
+          `/signin?error=user_fetch&message=${userError?.message || "No user"}`,
+          request.url
+        )
       );
     }
 
     console.log("User authenticated:", user.email);
 
     try {
-      const existingUser = await prisma.user.findUnique({
+      // Create a direct Prisma instance with explicit connection URL as a fallback
+      // This is a workaround for Vercel environment variable issues
+      const directPrisma = new PrismaClient({
+        datasources: {
+          db: {
+            url:
+              process.env.DATABASE_URL ||
+              "postgresql://prisma:slamdunk@db.jkcymhzpgcavyakojcvr.supabase.co:5432/postgres",
+          },
+        },
+      });
+
+      // Use explicit connection for database operations
+      console.log("Checking for existing user with email:", user.email);
+      const existingUser = await directPrisma.user.findUnique({
         where: { email: user.email },
       });
 
       if (existingUser) {
         console.log("Existing user found:", existingUser.username);
         await createSession(existingUser.username);
+        await directPrisma.$disconnect();
+        return NextResponse.redirect(new URL("/dashboard", request.url));
       } else {
         console.log("Creating new user");
-
         const username =
           user.user_metadata?.preferred_username ||
           user.user_metadata?.name?.replace(/\s+/g, "").toLowerCase() ||
@@ -88,7 +121,7 @@ export async function GET(request: NextRequest) {
           user.user_metadata?.full_name || user.user_metadata?.name || username;
 
         try {
-          const newUser = await prisma.user.create({
+          const newUser = await directPrisma.user.create({
             data: {
               email: user.email,
               username,
@@ -98,25 +131,42 @@ export async function GET(request: NextRequest) {
                 Math.random().toString(36).slice(-16),
             },
           });
+
           console.log("User created:", newUser.username);
           await createSession(newUser.username);
+          await directPrisma.$disconnect();
+          return NextResponse.redirect(new URL("/dashboard", request.url));
         } catch (createError) {
-          console.error("Failed to create user:", createError);
+          await directPrisma.$disconnect();
+          console.error("User creation error:", createError);
           return NextResponse.redirect(
-            new URL("/signin?error=user_creation", request.url)
+            new URL(
+              `/signin?error=create_user&message=${encodeURIComponent(
+                String(createError)
+              )}`,
+              request.url
+            )
           );
         }
       }
-
-      return NextResponse.redirect(new URL("/dashboard", request.url));
     } catch (dbError) {
-      console.error("Database error:", dbError);
+      console.error("Database operation error:", dbError);
       return NextResponse.redirect(
-        new URL("/signin?error=database", request.url)
+        new URL(
+          `/signin?error=database&message=${encodeURIComponent(
+            String(dbError)
+          )}`,
+          request.url
+        )
       );
     }
   } catch (error) {
     console.error("General error in OAuth callback:", error);
-    return NextResponse.redirect(new URL("/signin?error=general", request.url));
+    return NextResponse.redirect(
+      new URL(
+        `/signin?error=general&message=${encodeURIComponent(String(error))}`,
+        request.url
+      )
+    );
   }
 }

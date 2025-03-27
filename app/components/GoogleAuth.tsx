@@ -28,7 +28,8 @@ export default function GoogleAuth({ mode, className = "" }: GoogleAuthProps) {
           redirectTo: `${window.location.origin}/auth/callback`,
           queryParams: {
             access_type: "offline",
-            prompt: mode === "signup" ? "select_account" : undefined,
+            // Force consent screen to appear every time
+            prompt: "consent select_account",
           },
         },
       });
