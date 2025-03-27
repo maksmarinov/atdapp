@@ -72,30 +72,32 @@ export async function GET(request: NextRequest) {
       // Enhance database connection reliability
       await prisma.$connect();
 
-      const existingUser = await prisma.user.findUnique({
-        where: { email: user.email },
-      });
-
-      if (existingUser) {
-        await createSession(existingUser.username);
-      } else {
-        // Create new user
-        const username = user.email.split("@")[0];
-        const name = user.user_metadata?.name || username;
-
-        const newUser = await prisma.user.create({
-          data: {
-            email: user.email,
-            username,
-            name,
-            password:
-              Math.random().toString(36).slice(-16) +
-              Math.random().toString(36).slice(-16),
-          },
+      // Use a transaction for atomicity and better error handling
+      await prisma.$transaction(async (tx) => {
+        const existingUser = await tx.user.findUnique({
+          where: { email: user.email },
         });
 
-        await createSession(newUser.username);
-      }
+        if (existingUser) {
+          await createSession(existingUser.username);
+        } else {
+          const username = user.email.split("@")[0];
+          const name = user.user_metadata?.name || username;
+
+          const newUser = await tx.user.create({
+            data: {
+              email: user.email,
+              username,
+              name,
+              password:
+                Math.random().toString(36).slice(-16) +
+                Math.random().toString(36).slice(-16),
+            },
+          });
+
+          await createSession(newUser.username);
+        }
+      });
 
       return NextResponse.redirect(new URL("/dashboard", request.url));
     } catch (dbError) {
