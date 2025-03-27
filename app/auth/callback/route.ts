@@ -89,7 +89,7 @@ export async function GET(request: NextRequest) {
     try {
       // Use connection pooling URL
       const pooledDbUrl =
-        "postgresql://postgres.jkcymhzpgcavyakojcvr:slamdunk@aws-0-us-west-1.pooler.supabase.com:6543/postgres";
+        "postgresql://postgres.jkcymhzpgcavyakojcvr:slamdunk@aws-0-eu-central-1.pooler.supabase.com:5432/postgres";
 
       console.log("Using pooled connection URL for database access");
       const directPrisma = new PrismaClient({
