@@ -42,8 +42,7 @@ ATDApp is a Next.js application that provides authentication using both traditio
 
 ## Known Issues
 
-- **Vercel Deployment**: Google authentication works partially on Vercel - users are created in Supabase Auth but not in the database tables. This is due to connection restrictions between Vercel and the database.
-- **Workaround**: For testing the complete authentication flow, use the local development setup.
+- **Vercel Deployment**: Authentication is currently not working on Vercel
 
 ## Database Configuration
 
