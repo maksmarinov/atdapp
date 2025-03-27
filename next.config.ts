@@ -1,7 +1,12 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
-  /* config options here */
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  output: "standalone", // Required for Cloudflare
+  experimental: {
+    // Required to handle cookies in a serverless environment
+    serverComponentsExternalPackages: ["@prisma/client"],
+  },
+  // For handling dynamic routes correctly
+  reactStrictMode: true,
 };
 
-export default nextConfig;
+module.exports = nextConfig;

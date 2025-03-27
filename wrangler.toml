@@ -1,0 +1,15 @@
+name = "atdapp"
+compatibility_date = "2025-03-27"
+
+# If you're using Next.js, specify the build output
+[build]
+command = "npm run build"
+
+# For Next.js applications
+[site]
+bucket = ".next/static"
+entry-point = ".next/standalone"
+
+# Set environment variables
+[vars]
+NODE_ENV = "production"

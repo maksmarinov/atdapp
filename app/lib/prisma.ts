@@ -1,11 +1,9 @@
 import { PrismaClient } from "@prisma/client";
 
-// PrismaClient is attached to the `global` object in development to prevent
-// exhausting your database connection limit.
+// For Cloudflare compatibility
 const globalForPrisma = global as unknown as { prisma: PrismaClient };
 
-// Force Prisma to use the DIRECT_URL instead of DATABASE_URL
-const prisma =
+export const prisma =
   globalForPrisma.prisma ||
   new PrismaClient({
     datasources: {
