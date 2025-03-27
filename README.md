@@ -1,6 +1,8 @@
 # ATDApp - Next.js Application
 
-**⚠️ IMPORTANT WARNING:** Google OAuth authentication only works in local development environment. Vercel deployment currently cannot reach the database tables for user creation. Use local development setup for full functionality.
+## ⚠️ DEPLOYMENT NOTICE ⚠️
+
+**IMPORTANT:** Currently, this application only functions properly when run locally. Deployed versions (including Vercel) have authentication issues and cannot properly connect to database tables for user creation and management. Please use local development setup for full functionality.
 
 ## Project Overview
 
