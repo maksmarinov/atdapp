@@ -5,18 +5,22 @@ import prisma from "./prisma";
 export const getCurrentUser = cache(async () => {
   const session = await getSession();
   if (!session) return null;
+
+  // Skip during build phase to prevent build issues
   if (
     typeof window === "undefined" &&
     process.env.NEXT_PHASE === "phase-production-build"
   ) {
     return null;
   }
+
   try {
     if (!session.username) {
       console.error("Session found, but user identifier is missing.");
       return null;
     }
 
+    // Type-safe usage with properly cast result
     const user = await prisma.user.findUnique({
       where: {
         username: session.username,
@@ -32,9 +36,10 @@ export const getCurrentUser = cache(async () => {
 
 export const getUserByEmail = cache(async (email: string) => {
   try {
+    // Type-safe usage
     const result = await prisma.user.findUnique({
       where: {
-        email: email,
+        email,
       },
     });
     return result;
@@ -55,6 +60,7 @@ export const mockFetch = <T>(data: T, delay: number): Promise<T> => {
 export function isValidEmail(email: string) {
   return /\S+@\S+\.\S+/.test(email);
 }
+
 export function slugify(text: string) {
   return text
     .toString()
