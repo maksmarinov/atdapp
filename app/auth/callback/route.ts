@@ -1,9 +1,8 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
-// import prisma from "@/app/lib/prisma";
+import prisma from "@/app/lib/prisma";
 import { createSession } from "@/app/lib/auth";
-import { PrismaClient } from "@prisma/client";
 
 export async function GET(request: NextRequest) {
   console.log("Auth callback triggered");
@@ -52,6 +51,7 @@ export async function GET(request: NextRequest) {
     );
 
     // Exchange code for session
+    console.log("Exchanging code for session...");
     const { error: sessionError } = await supabase.auth.exchangeCodeForSession(
       code
     );
@@ -87,29 +87,14 @@ export async function GET(request: NextRequest) {
     console.log("User authenticated:", user.email);
 
     try {
-      // Use connection pooling URL
-      const pooledDbUrl =
-        "postgresql://postgres.jkcymhzpgcavyakojcvr:slamdunk@aws-0-eu-central-1.pooler.supabase.com:5432/postgres";
-
-      console.log("Using pooled connection URL for database access");
-      const directPrisma = new PrismaClient({
-        datasources: {
-          db: {
-            url: pooledDbUrl,
-          },
-        },
-      });
-
-      // Rest of your code remains the same
       console.log("Checking for existing user with email:", user.email);
-      const existingUser = await directPrisma.user.findUnique({
+      const existingUser = await prisma.user.findUnique({
         where: { email: user.email },
       });
 
       if (existingUser) {
         console.log("Existing user found:", existingUser.username);
         await createSession(existingUser.username);
-        await directPrisma.$disconnect();
         return NextResponse.redirect(new URL("/dashboard", request.url));
       } else {
         console.log("Creating new user");
@@ -121,34 +106,20 @@ export async function GET(request: NextRequest) {
         const name =
           user.user_metadata?.full_name || user.user_metadata?.name || username;
 
-        try {
-          const newUser = await directPrisma.user.create({
-            data: {
-              email: user.email,
-              username,
-              name,
-              password:
-                Math.random().toString(36).slice(-16) +
-                Math.random().toString(36).slice(-16),
-            },
-          });
+        const newUser = await prisma.user.create({
+          data: {
+            email: user.email,
+            username,
+            name,
+            password:
+              Math.random().toString(36).slice(-16) +
+              Math.random().toString(36).slice(-16),
+          },
+        });
 
-          console.log("User created:", newUser.username);
-          await createSession(newUser.username);
-          await directPrisma.$disconnect();
-          return NextResponse.redirect(new URL("/dashboard", request.url));
-        } catch (createError) {
-          await directPrisma.$disconnect();
-          console.error("User creation error:", createError);
-          return NextResponse.redirect(
-            new URL(
-              `/signin?error=create_user&message=${encodeURIComponent(
-                String(createError)
-              )}`,
-              request.url
-            )
-          );
-        }
+        console.log("User created:", newUser.username);
+        await createSession(newUser.username);
+        return NextResponse.redirect(new URL("/dashboard", request.url));
       }
     } catch (dbError) {
       console.error("Database operation error:", dbError);
