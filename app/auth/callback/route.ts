@@ -9,6 +9,7 @@ export async function GET(request: NextRequest) {
   const code = requestUrl.searchParams.get("code");
 
   if (!code) {
+    console.error("No code provided in callback");
     return NextResponse.redirect(new URL("/signin?error=no_code", request.url));
   }
 
@@ -44,8 +45,14 @@ export async function GET(request: NextRequest) {
     );
 
     if (sessionError) {
+      console.error("Session exchange error:", sessionError);
       return NextResponse.redirect(
-        new URL(`/signin?error=session_exchange`, request.url)
+        new URL(
+          `/signin?error=session_exchange&details=${encodeURIComponent(
+            sessionError.message
+          )}`,
+          request.url
+        )
       );
     }
 
@@ -55,12 +62,16 @@ export async function GET(request: NextRequest) {
     } = await supabase.auth.getUser();
 
     if (userError || !user) {
+      console.error("User fetch error:", userError);
       return NextResponse.redirect(
         new URL(`/signin?error=user_fetch`, request.url)
       );
     }
 
     try {
+      // Enhance database connection reliability
+      await prisma.$connect();
+
       const existingUser = await prisma.user.findUnique({
         where: { email: user.email },
       });
@@ -87,12 +98,25 @@ export async function GET(request: NextRequest) {
       }
 
       return NextResponse.redirect(new URL("/dashboard", request.url));
-    } catch {
+    } catch (dbError) {
+      console.error("Database error in callback:", dbError);
+      // Even if DB operations fail, let's try to persist the session
+      try {
+        const username = user.email.split("@")[0];
+        await createSession(username);
+      } catch (sessionError) {
+        console.error("Session creation error:", sessionError);
+      }
+
       return NextResponse.redirect(
-        new URL(`/signin?error=database`, request.url)
+        new URL("/dashboard?warning=incomplete_profile", request.url)
       );
+    } finally {
+      // Always disconnect Prisma client in serverless environment
+      await prisma.$disconnect();
     }
-  } catch {
+  } catch (error) {
+    console.error("General error in auth callback:", error);
     return NextResponse.redirect(new URL(`/signin?error=general`, request.url));
   }
 }

@@ -1,21 +1,20 @@
 import { PrismaClient } from "@prisma/client";
-import { withAccelerate } from "@prisma/extension-accelerate";
 
-// Create a new PrismaClient instance
-const prismaClientSingleton = () => {
-  return new PrismaClient().$extends(withAccelerate());
-};
+const globalForPrisma = global as unknown as { prisma: PrismaClient };
 
-// Define a type for the extended client
-type PrismaClientSingleton = ReturnType<typeof prismaClientSingleton>;
-
-// Create global variable for prisma in development to prevent multiple instances
-const globalForPrisma = globalThis as unknown as {
-  prisma: PrismaClientSingleton | undefined;
-};
-
-// Export singleton pattern - reuse existing client or create new one
-const prisma = globalForPrisma.prisma ?? prismaClientSingleton();
+const prisma =
+  globalForPrisma.prisma ||
+  new PrismaClient({
+    log:
+      process.env.NODE_ENV === "development"
+        ? ["query", "error", "warn"]
+        : ["error"],
+    datasources: {
+      db: {
+        url: process.env.DATABASE_URL,
+      },
+    },
+  });
 
 if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
 
