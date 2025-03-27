@@ -3,7 +3,7 @@ import Link from "next/link";
 import { signIn } from "@/app/actions/authenticate";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
-import GoogleAuth from "@/app/components/GoogleAuth";
+// import GoogleAuth from "@/app/components/GoogleAuth";
 
 export default function SigninPage() {
   const router = useRouter();
@@ -57,14 +57,14 @@ export default function SigninPage() {
           Sign In
         </button>
       </form>
-      <div className="relative flex py-3 items-center w-60">
+      {/* <div className="relative flex py-3 items-center w-60">
         <div className="flex-grow border-t border-gray-300"></div>
         <span className="flex-shrink mx-4 text-gray-500 text-sm">OR</span>
         <div className="flex-grow border-t border-gray-300"></div>
       </div>
       <div>
-        <GoogleAuth mode="signin" />
-      </div>
+        <GoogleAuth />
+      </div> */}
     </div>
   );
 }

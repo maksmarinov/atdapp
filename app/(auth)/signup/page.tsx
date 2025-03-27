@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 import { signUp } from "../../actions/authenticate";
-import GoogleAuth from "../../components/GoogleAuth";
+// import GoogleAuth from "../../components/GoogleAuth";
 
 export default function SignupPage() {
   const router = useRouter();
@@ -90,9 +90,7 @@ export default function SignupPage() {
         <span className="flex-shrink mx-4 text-gray-500 text-sm">OR</span>
         <div className="flex-grow border-t border-gray-300"></div>
       </div>
-      <div>
-        <GoogleAuth mode="signup" />
-      </div>
+      <div>{/* <GoogleAuth /> */}</div>
     </div>
   );
 }
