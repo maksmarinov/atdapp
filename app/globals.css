@@ -64,12 +64,11 @@ body {
   opacity: 0.4; 
 }
 
-
-
 .relative a:hover ~ .mt-5 .cow {
   transition: 1.7s;
   transform: translate(0%, -90%); 
 }
+
 .input-field {
   opacity: 95%;
   padding: 0.125rem;
@@ -80,4 +79,17 @@ body {
   color: rgb(221, 221, 221);
   font-weight: 300;
   margin-bottom: 1.5rem;
+}
+
+.gradient-slide {
+  
+  background: linear-gradient(180deg, #003300, #000000, #003300, #000000, #003300); /* Vertical gradient */
+  background-size: 100% 200%; /* Size for vertical animation */
+  animation: gradientMoveVertical 4s linear infinite;
+ 
+}
+
+@keyframes gradientMoveVertical {
+  0% { background-position: 50% 0%; }
+  100% { background-position: 50% 200%; }
 }
