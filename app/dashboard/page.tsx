@@ -10,7 +10,7 @@ export default async function DashboardPage() {
     <div className="min-h-screen ">
       <SlidingMenu />
 
-      <div className="flex flex-col min-h-screen w-full ml-[17rem] pt-10">
+      <div className="flex flex-col min-h-screen w-full max-w-10/12 ml-[6rem] border-2 border-amber-200 pt-10">
         {user?.email && (
           <div className="text-xl mb-4 ">Welcome, {user.username}</div>
         )}

@@ -56,7 +56,7 @@ body {
   opacity: 0; 
   filter: blur(20px); 
   border-radius: 150%; 
-  z-index: 0; 
+  
   transition: opacity 1.5s ease;
 }
 
@@ -82,12 +82,15 @@ body {
 }
 
 .gradient-slide {
-  
-  background: linear-gradient(180deg, #003300, #000000, #003300, #000000, #003300); /* Vertical gradient */
+  background: linear-gradient(180deg, #064e06, #000000, #064e06, #000000, #064e06); /* Vertical gradient */
   background-size: 100% 200%; /* Size for vertical animation */
-  animation: gradientMoveVertical 4s linear infinite;
- 
+  opacity: 1; /* Make visible */
+  filter: blur(1px); /* Subtle blur instead of 190px */
+  border-radius: 1px; /* Subtle rounding */
+  animation: gradientMoveVertical 8s linear infinite;
+
 }
+
 
 @keyframes gradientMoveVertical {
   0% { background-position: 50% 0%; }
