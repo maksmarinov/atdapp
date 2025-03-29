@@ -22,7 +22,7 @@ export default function SigninPage() {
     }
   };
   return (
-    <div className="flex h-200 w-full items-center justify-start flex-col pt-50">
+    <div className="flex h-200 w-full items-center justify-start flex-col pt-[2rem]">
       <div className=" mb-4 flex flex-row">
         <Link className="mx-2.5" href={"/signup"}>
           SIGN UP

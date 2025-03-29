@@ -25,7 +25,7 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="flex h-200 w-full items-center justify-start flex-col pt-50">
+    <div className="flex h-200 w-full items-center justify-start pt-[2rem] flex-col ">
       <div className="mb-4 flex flex-row">
         <div className="border-b-2 mx-2.5">SIGN UP</div>
         <Link className="mx-2.5" href={"/signin"}>
