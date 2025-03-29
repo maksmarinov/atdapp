@@ -25,10 +25,26 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+
 .cow {
-  margin-top: 4rem;
-  filter: drop-shadow(0 0 3px rgb(13, 148, 24)); 
-  transition: transform 1s ease; 
+  position: relative; 
+  left: 50%;
+  filter: drop-shadow(0 0 3px rgb(13, 148, 24));
+  animation: cowJourney 4s ease-in-out infinite; /* 4s shorter animation */
+}
+
+
+@keyframes cowJourney {
+
+  0%, 100% {
+    top: 0; 
+    transform: translateX(-50%) translateY(0); /* No vertical offset */
+  }
+  
+  50% {
+    top: 0; 
+    transform: translateX(-50%) translateY(-40px); /* Move up with transform instead */
+  }
 }
 
 .signup-button {
@@ -45,28 +61,16 @@ body {
   z-index: 1; 
 }
 
+/* Keep the glow-div as is */
 .glow-div {
   position: absolute;
-  top: 420%; 
-  left: 50%; 
-  transform: translateX(-50%);
-  width: 200%; 
-  height: 120%; 
+  top: 100%;
+  width: 40%; 
+  height: 25%; 
   background-color: #22c55e; 
-  opacity: 0; 
+  opacity: 0.6; 
   filter: blur(20px); 
-  border-radius: 150%; 
-  
-  transition: opacity 1.5s ease;
-}
-
-.signup-button:hover .glow-div {
-  opacity: 0.4; 
-}
-
-.relative a:hover ~ .mt-5 .cow {
-  transition: 1.7s;
-  transform: translate(0%, -90%); 
+  border-radius: 360%;
 }
 
 .input-field {
@@ -83,10 +87,9 @@ body {
 
 .gradient-slide {
   background: linear-gradient(180deg, #064e06, #000000, #064e06, #000000, #064e06); /* Vertical gradient */
-  background-size: 100% 200%; /* Size for vertical animation */
-  opacity: 1; /* Make visible */
-  filter: blur(1px); /* Subtle blur instead of 190px */
-  border-radius: 1px; /* Subtle rounding */
+  background-size: 100% 200%; 
+  filter: blur(1px); 
+  border-radius: 1px; 
   animation: gradientMoveVertical 8s linear infinite;
 
 }
@@ -95,4 +98,9 @@ body {
 @keyframes gradientMoveVertical {
   0% { background-position: 50% 0%; }
   100% { background-position: 50% 200%; }
+}
+.button-hover:hover {
+  opacity: 1;
+  color: #ffffff;
+  border-radius: 0;
 }

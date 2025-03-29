@@ -17,21 +17,21 @@ export default function Task() {
         </div>
 
         <div id="taskActions" className="flex flex-row gap-2">
-          <button className="cursor-pointer bg-green-800/40 text-black hover:bg-green-600/50 rounded-sm px-2">
-            Mark Done
+          <button className="cursor-pointer bg-green-500/30 text-black rounded px-2  button-hover">
+            Done
           </button>
           <button
             id="edit"
-            className="cursor-pointer text-sm px-2 py-1 bg-neutral-700 rounded hover:bg-neutral-600"
+            className="cursor-pointer  text-black px-2 bg-neutral-500/30 rounded button-hover"
           >
             Edit
           </button>
 
           <button
             id="delete"
-            className="cursor-pointer bg-red-500/20 text-sm px-2 py-1 rounded hover:bg-red-600/50"
+            className="cursor-pointer text-black bg-red-500/30 text-sm px-2  rounded button-hover"
           >
-            🗑️
+            X
           </button>
         </div>
       </div>

@@ -9,12 +9,9 @@ export default async function Home() {
         <div className="mb-10 text-xl">You can play bulls and cows!</div>
         <div className="flex flex-col items-center relative overflow-visible">
           <Link href={"/signup"}>
-            <div className="relative">
-              <button className="signup-button" type="button">
-                <div className="glow-div"></div>
-                Sign Up
-              </button>
-            </div>
+            <button className="signup-button" type="button">
+              Sign Up
+            </button>
           </Link>
 
           <div className="mt-5">
@@ -26,6 +23,7 @@ export default async function Home() {
               className="cow"
             />
           </div>
+          <div className="glow-div"></div>
         </div>
       </div>
     </div>

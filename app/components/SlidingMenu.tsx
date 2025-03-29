@@ -9,14 +9,14 @@ export default function SlidingMenu() {
     <div>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed top-5 border-2 font-extrabold border-green-800 left-2 z-50 bg-neutral-900 py-1 px-3 rounded-lg"
+        className="fixed top-5 font-extrabold border-2 text-violet-800 left-4 z-50 bg-neutral-900 py-1 px-2 cursor-pointer rounded-lg"
       >
         {isOpen ? "X" : "☰"}
       </button>
 
       <div
         className={`fixed top-0 left-0 h-screen w-64 bg-neutral-900 p-10 transform transition-transform duration-300 ease-in-out ${
-          isOpen ? "translate-x-0" : "-translate-x-48"
+          isOpen ? "translate-x-0" : "-translate-x-5/6"
         } z-40`}
       >
         <div className="py-10 font-extrabold underline text-white text-3xl mb-8">

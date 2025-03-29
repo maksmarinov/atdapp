@@ -5,7 +5,7 @@ export default function TaskList() {
   const taskArray = Array(10).fill(null);
 
   return (
-    <div className="w-full  border-2 border-amber-100">
+    <div className="w-full">
       {" "}
       <h3 className="text-xl font-medium mb-4">Your Tasks</h3>
       <div className="bg-neutral-800 rounded-lg shadow-lg p-4">
