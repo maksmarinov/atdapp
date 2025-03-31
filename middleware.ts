@@ -1,30 +1,29 @@
 import { NextResponse } from "next/server";
 import { NextRequest } from "next/server";
-import * as jose from "jose";
+import { jwtVerify } from "jose";
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  const token = request.cookies.get("auth_token")?.value;
+  // IMPORTANT: Skip auth check on authentication pages
+  if (pathname.includes("/signin") || pathname.includes("/signup")) {
+    return NextResponse.next();
+  }
 
+  const token = request.cookies.get("auth_token")?.value;
   let isAuthenticated = false;
 
   if (token) {
     try {
-      const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET);
-      await jose.jwtVerify(token, JWT_SECRET);
+      const secret = new TextEncoder().encode(process.env.JWT_SECRET);
+      await jwtVerify(token, secret);
       isAuthenticated = true;
     } catch {
       isAuthenticated = false;
     }
   }
 
-  if (pathname === "/" || pathname === "/signin" || pathname === "/signup") {
-    if (isAuthenticated) {
-      return NextResponse.redirect(new URL("/dashboard", request.url));
-    }
-  }
-
+  // Protected routes - redirect to login if not authenticated
   if (
     (pathname.startsWith("/dashboard") ||
       pathname.startsWith("/game") ||
@@ -38,12 +37,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: [
-    "/",
-    "/signin",
-    "/signup",
-    "/dashboard/:path*",
-    "/game",
-    "/profile",
-  ],
+  matcher: ["/dashboard/:path*", "/game", "/profile", "/signin", "/signup"],
 };

@@ -33,6 +33,20 @@ export const getCurrentUser = cache(async () => {
   }
 });
 
+export const getUserByUsername = cache(async (username: string) => {
+  try {
+    const result = await prisma.user.findUnique({
+      where: {
+        username,
+      },
+    });
+    return result;
+  } catch (error) {
+    console.error("Error getting user by username:", error);
+    return null;
+  }
+});
+
 export const getUserByEmail = cache(async (email: string) => {
   try {
     const result = await prisma.user.findUnique({

@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { signIn } from "@/app/actions/authenticate";
-import toast from "react-hot-toast";
+import { toast, Toaster } from "react-hot-toast";
 import { useRouter } from "next/navigation";
 
 export default function SigninPage() {
@@ -14,8 +14,9 @@ export default function SigninPage() {
 
     const result = await signIn(userData);
 
-    if (result?.error) {
-      toast.error(result.error);
+    if (!result.success) {
+      // Show the message from the response
+      toast.error(result.message || "Sign in failed");
     } else {
       toast.success("Sign in successful!");
       router.push("/dashboard");
@@ -23,6 +24,7 @@ export default function SigninPage() {
   };
   return (
     <div className="flex h-200 w-full items-center justify-start flex-col pt-[2rem]">
+      <Toaster position="top-center" />
       <div className=" mb-4 flex flex-row">
         <Link className="mx-2.5" href={"/signup"}>
           SIGN UP

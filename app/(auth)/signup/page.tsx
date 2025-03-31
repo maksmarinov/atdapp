@@ -2,30 +2,41 @@
 import "../../globals.css";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { toast } from "react-hot-toast";
+import { toast, Toaster } from "react-hot-toast";
 import { signUp } from "../../actions/authenticate";
+import { useState } from "react";
 
 export default function SignupPage() {
   const router = useRouter();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
+    setIsSubmitting(true);
 
-    const form = event.currentTarget as HTMLFormElement;
-    const userData = new FormData(form);
+    try {
+      const form = event.currentTarget as HTMLFormElement;
+      const userData = new FormData(form);
 
-    const result = await signUp(userData);
+      const result = await signUp(userData);
 
-    if (result?.error) {
-      toast.error(result.error);
-    } else {
-      toast.success("Signup successful!");
-      router.push("/dashboard");
+      if (!result.success) {
+        toast.error(result.error || "Signup failed");
+        setIsSubmitting(false);
+      } else {
+        toast.success("Signup successful!");
+        router.push("/dashboard");
+      }
+    } catch (error) {
+      console.error("Error during signup:", error);
+      toast.error("An unexpected error occurred");
+      setIsSubmitting(false);
     }
   };
 
   return (
     <div className="flex h-200 w-full items-center justify-start pt-[2rem] flex-col ">
+      <Toaster position="top-center" />
       <div className="mb-4 flex flex-row">
         <div className="border-b-2 mx-2.5">SIGN UP</div>
         <Link className="mx-2.5" href={"/signin"}>
@@ -80,8 +91,9 @@ export default function SignupPage() {
         <button
           className="font-bold border-2 px-1 cursor-pointer"
           type="submit"
+          disabled={isSubmitting}
         >
-          Sign Up
+          {isSubmitting ? "Signing Up..." : "Sign Up"}
         </button>
       </form>
     </div>

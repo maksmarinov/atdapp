@@ -7,7 +7,7 @@ import {
   createUser,
   deleteSession,
 } from "../lib/auth";
-import { getUserByEmail } from "../lib/utils";
+import { getUserByEmail, getUserByUsername } from "../lib/utils";
 
 const SignUpSchema = z
   .object({
@@ -48,7 +48,7 @@ export async function signIn(formData: FormData): Promise<ActionResponse> {
     if (!validDataRes.success) {
       return {
         success: false,
-        message: "Validation failed",
+        message: "Invalid data provided",
         errors: validDataRes.error.flatten().fieldErrors,
       };
     }
@@ -87,48 +87,52 @@ export async function signIn(formData: FormData): Promise<ActionResponse> {
   }
 }
 
-export async function signUp(formData: FormData): Promise<ActionResponse> {
+export async function signUp(formData: FormData) {
   try {
-    const data = {
-      username: formData.get("username") as string,
-      name: formData.get("name") as string,
-      email: formData.get("email") as string,
-      password: formData.get("password") as string,
-      password2: formData.get("password2") as string,
-    };
+    const email = formData.get("email") as string;
+    const name = formData.get("name") as string;
+    const username = formData.get("username") as string;
+    const password = formData.get("password") as string;
+    const password2 = formData.get("password2") as string;
 
-    const validationResult = SignUpSchema.safeParse(data);
-    if (!validationResult.success) {
+    console.log("Processing signup for:", email); // Logging
+
+    if (!email || !username || !name || !password) {
       return {
         success: false,
-        message: "Validation failed",
-        errors: validationResult.error.flatten().fieldErrors,
+        error: "All fields are required",
       };
     }
 
-    const existingUser = await getUserByEmail(data.email);
+    if (password !== password2) {
+      return {
+        success: false,
+        error: "Passwords don't match",
+      };
+    }
+
+    const existingUser = await getUserByEmail(email);
     if (existingUser) {
       return {
         success: false,
-        message: "User with this email already exists",
-        errors: {
-          email: ["User with this email already exists"],
-        },
+        error: "User with this email already exists",
       };
     }
 
-    // Create new user
-    const user = await createUser(
-      data.email,
-      data.password,
-      data.username,
-      data.name
-    );
+    const userWithUsername = await getUserByUsername(username);
+    if (userWithUsername) {
+      return {
+        success: false,
+        error: "This username is already taken",
+      };
+    }
+
+    const user = await createUser(email, password, username, name);
+
     if (!user) {
       return {
         success: false,
-        message: "Failed to create user",
-        error: "Failed to create user",
+        error: "Failed to create account",
       };
     }
 
@@ -142,8 +146,7 @@ export async function signUp(formData: FormData): Promise<ActionResponse> {
     console.error("Sign up error:", error);
     return {
       success: false,
-      message: "An error occurred while creating your account",
-      error: "Failed to create account",
+      error: error.message || "An error occurred while creating your account",
     };
   }
 }
