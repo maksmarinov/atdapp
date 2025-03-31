@@ -1,15 +1,22 @@
 import { NextResponse } from "next/server";
 import prisma from "@/app/lib/prisma";
 
+// Updated signature for Next.js 15
 export async function GET(
   request: Request,
-  { params }: { params: { id: any } } // Exact parameter structure from example
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
-    const id = parseInt(params.id); // Access params directly now
+    // Await the params promise
+    const { id } = await context.params;
+    const taskId = parseInt(id);
+
+    if (isNaN(taskId)) {
+      return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
+    }
 
     const task = await prisma.task.findUnique({
-      where: { id },
+      where: { id: taskId },
     });
 
     if (!task) {
