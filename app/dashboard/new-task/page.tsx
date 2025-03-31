@@ -1,6 +1,8 @@
 import { getCurrentUser } from "../../lib/utils";
 import TaskForm from "../../components/TaskForm";
 
+export const dynamic = "force-dynamic";
+
 export default async function CreateTaskPage() {
   // Updated function name for clarity
   const user = await getCurrentUser();

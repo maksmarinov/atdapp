@@ -5,6 +5,8 @@ import SlidingMenu from "../components/SlidingMenu";
 import TaskList from "../components/TaskList";
 import NewTaskButton from "../components/NewTaskButton"; // Updated import
 
+export const dynamic = "force-dynamic";
+
 export default async function DashboardPage() {
   const user = await getCurrentUser();
   if (!user) {
