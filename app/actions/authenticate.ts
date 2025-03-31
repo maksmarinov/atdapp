@@ -28,8 +28,8 @@ const SignInSchema = z.object({
   email: z.string().min(1, { message: "Please enter your email" }),
 });
 
-export type SignInData = z.infer<typeof SignUpSchema>;
-export type SignUpData = z.infer<typeof SignInSchema>;
+export type SignUpSchema = z.infer<typeof SignUpSchema>;
+export type SignInSchema = z.infer<typeof SignInSchema>;
 
 export type ActionResponse = {
   success: boolean;
@@ -155,6 +155,6 @@ export async function signOut(): Promise<void> {
     console.error("Sign out error:", error);
     throw new Error("Failed to sign out");
   } finally {
-    redirect("/signin");
+    redirect("/");
   }
 }
