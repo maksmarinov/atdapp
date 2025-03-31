@@ -3,19 +3,25 @@ import { NextResponse } from "next/server";
 
 export async function GET(
   request: Request,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  { params }: { params: { id: any } }
+  { params }: { params: { id: string } }
 ) {
   try {
-    const id = params.id;
+    const id = parseInt(params.id, 10);
+
+    if (isNaN(id)) {
+      return NextResponse.json({ error: "Invalid ID format" }, { status: 400 });
+    }
+
     const task = await prisma.task.findFirst({
       where: {
         id: id,
       },
     });
+
     if (!task) {
       return NextResponse.json({ error: "Task not found" }, { status: 404 });
     }
+
     return NextResponse.json(task);
   } catch (error) {
     console.error("Error fetching task:", error);
