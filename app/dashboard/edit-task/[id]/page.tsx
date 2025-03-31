@@ -4,17 +4,19 @@ import prisma from "../../../lib/prisma";
 import { notFound, redirect } from "next/navigation";
 
 export default async function EditTaskPage({
-  params,
+  params: paramsPromise,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
+  // Get the current user
   const user = await getCurrentUser();
 
   if (!user) {
     redirect("/login?next=/dashboard");
   }
 
-  // Get task ID from URL params
+  // Get task ID from URL params (now as a Promise)
+  const params = await paramsPromise;
   const taskId = parseInt(params.id, 10);
 
   if (isNaN(taskId)) {
