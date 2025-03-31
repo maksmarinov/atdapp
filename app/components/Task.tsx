@@ -78,14 +78,11 @@ export default function Task({ task }: TaskProps) {
               className={`cursor-pointer text-sm px-2 py-1 rounded appearance-none ${
                 task.status === TaskStatus.COMPLETED
                   ? "bg-green-800/70"
-                  : task.status === TaskStatus.PENDING
-                  ? "bg-yellow-800/70"
                   : "bg-blue-800/70"
               }`}
             >
               <option value={TaskStatus.IN_PROGRESS}>In Progress</option>
               <option value={TaskStatus.COMPLETED}>Completed</option>
-              <option value={TaskStatus.PENDING}>Pending</option>
             </select>
           </div>
 
@@ -98,7 +95,7 @@ export default function Task({ task }: TaskProps) {
           <button
             onClick={handleDelete}
             disabled={isDeleting}
-            className="cursor-pointer border border-red-800 text-sm px-2 py-1 rounded hover:bg-red-900/30"
+            className="cursor-pointer  bg-red-800/40 text-sm px-2 py-1 rounded hover:bg-red-700/70"
           >
             🗑️
           </button>

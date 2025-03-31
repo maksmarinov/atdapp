@@ -279,7 +279,6 @@ export async function markTaskStatus(
     const statusMessages = {
       [TaskStatus.COMPLETED]: "Task marked as complete!",
       [TaskStatus.IN_PROGRESS]: "Task marked as in progress",
-      [TaskStatus.PENDING]: "Task marked as pending",
     };
 
     return {

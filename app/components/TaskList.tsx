@@ -26,7 +26,6 @@ export default async function TaskList() {
 
   return (
     <div className="w-full">
-      <h3 className="text-xl font-medium mb-4">Your Tasks</h3>
       <div className="bg-neutral-800 rounded-lg shadow-lg p-4">
         <ul className="divide-y divide-neutral-700">
           {userTasks.map((task) => (

@@ -160,7 +160,6 @@ export default function TaskForm({
           >
             <option value="IN_PROGRESS">In Progress</option>
             <option value="COMPLETED">Completed</option>
-            <option value="PENDING">Pending</option>
           </select>
         </div>
 
