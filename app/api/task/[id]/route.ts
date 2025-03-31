@@ -1,22 +1,12 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import prisma from "@/app/lib/prisma";
 
-interface RouteContext {
-  params: {
-    id: string;
-  };
-}
-
 export async function GET(
-  request: NextRequest, // Changed from Request to NextRequest
-  context: RouteContext // Using the defined interface instead of inline destructuring
+  request: Request,
+  { params }: { params: { id: any } } // Exact parameter structure from example
 ) {
   try {
-    const id = parseInt(context.params.id);
-
-    if (isNaN(id)) {
-      return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
-    }
+    const id = parseInt(params.id); // Access params directly now
 
     const task = await prisma.task.findUnique({
       where: { id },
