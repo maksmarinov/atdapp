@@ -1,8 +1,6 @@
 import { getCurrentUser } from "../../lib/utils";
 import TaskForm from "../../components/TaskForm";
 
-export const dynamic = "force-dynamic";
-
 export default async function CreateTaskPage() {
   // Updated function name for clarity
   const user = await getCurrentUser();
@@ -12,7 +10,7 @@ export default async function CreateTaskPage() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center py-12 px-4">
+    <div className="flex min-h-screen flex-col ml-[4rem] py-12 px-4">
       <div className="w-full max-w-md">
         <h1 className="text-2xl font-bold mb-6 text-center">Create New Task</h1>
         <TaskForm userId={user.id} />

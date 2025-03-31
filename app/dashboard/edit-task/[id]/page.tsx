@@ -36,7 +36,7 @@ export default async function EditTaskPage({
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center py-12 px-4">
+    <div className="flex min-h-screen flex-col ml-[4rem] py-12 px-4">
       <div className="w-full max-w-md">
         <h1 className="text-2xl font-bold mb-6 text-center">Edit Task</h1>
         <TaskForm task={task} userId={user.id} isEditing={true} />
