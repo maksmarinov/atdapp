@@ -52,7 +52,7 @@ export async function createTask(data: TaskData): Promise<ActionResponse> {
         description: validData.description || "",
         dueDate: validData.dueDate,
         status: validData.status || "IN_PROGRESS",
-        userId: user.id, // Use the current user's ID, ignoring any passed ID
+        userId: user.id,
       },
     });
 

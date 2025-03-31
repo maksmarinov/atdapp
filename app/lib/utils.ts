@@ -105,5 +105,3 @@ export function slugify(text: string) {
     .replace(/^-+/, "")
     .replace(/-+$/, "");
 }
-
-// Add this function to get the current user's tasks

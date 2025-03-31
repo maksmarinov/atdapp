@@ -3,16 +3,12 @@ import { getCurrentUser } from "../lib/utils";
 import { getAllTasks } from "../lib/utils"; // Assuming this exists
 
 export default async function TaskList() {
-  // Get current user
   const user = await getCurrentUser();
 
-  // Get tasks
   const allTasks = user ? await getAllTasks() : [];
 
-  // Filter tasks for current user
   const userTasks = allTasks.filter((task) => task.userId === user?.id);
 
-  // Handle empty state
   if (!userTasks || userTasks.length === 0) {
     return (
       <div className="w-full">

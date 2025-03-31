@@ -8,14 +8,12 @@ export default async function EditTaskPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  // Get the current user
   const user = await getCurrentUser();
 
   if (!user) {
     redirect("/login?next=/dashboard");
   }
 
-  // Get task ID from URL params (now as a Promise)
   const params = await paramsPromise;
   const taskId = parseInt(params.id, 10);
 
@@ -23,14 +21,12 @@ export default async function EditTaskPage({
     notFound();
   }
 
-  // Fetch the task
   const task = await prisma.task.findUnique({
     where: {
       id: taskId,
     },
   });
 
-  // Check if task exists and belongs to current user
   if (!task || task.userId !== user.id) {
     notFound();
   }

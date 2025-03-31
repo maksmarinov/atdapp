@@ -1,13 +1,11 @@
 import { NextResponse } from "next/server";
 import prisma from "@/app/lib/prisma";
 
-// Updated signature for Next.js 15
 export async function GET(
   request: Request,
   context: { params: Promise<{ id: string }> }
 ) {
   try {
-    // Await the params promise
     const { id } = await context.params;
     const taskId = parseInt(id);
 
