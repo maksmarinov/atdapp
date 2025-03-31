@@ -1,21 +1,20 @@
-import prisma from "@/app/lib/prisma";
 import { NextResponse } from "next/server";
+import prisma from "@/app/lib/prisma";
+import { NextRequest } from "next/server";
 
 export async function GET(
-  request: Request,
-  context: { params: { id: string } }
+  request: NextRequest,
+  { params }: { params: { id: string } }
 ) {
   try {
-    const id = parseInt(context.params.id, 10);
+    const id = parseInt(params.id);
 
     if (isNaN(id)) {
-      return NextResponse.json({ error: "Invalid ID format" }, { status: 400 });
+      return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
     }
 
-    const task = await prisma.task.findFirst({
-      where: {
-        id: id,
-      },
+    const task = await prisma.task.findUnique({
+      where: { id },
     });
 
     if (!task) {
@@ -24,9 +23,8 @@ export async function GET(
 
     return NextResponse.json(task);
   } catch (error) {
-    console.error("Error fetching task:", error);
     return NextResponse.json(
-      { error: "Failed to fetch task" },
+      { message: "Failed to fetch task:", error },
       { status: 500 }
     );
   }

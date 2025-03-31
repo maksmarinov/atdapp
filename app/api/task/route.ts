@@ -3,16 +3,17 @@ import prisma from "@/app/lib/prisma";
 
 export async function GET() {
   try {
-    const allIssues = await prisma.task.findMany();
-    return NextResponse.json(allIssues);
+    const allTasks = await prisma.task.findMany();
+    return NextResponse.json(allTasks);
   } catch (error) {
-    console.error("Error fetching issues:", error);
+    console.error("Error fetching tasks:", error);
     return NextResponse.json(
-      { error: "Failed to fetch issues" },
+      { error: "Failed to fetch tasks" },
       { status: 500 }
     );
   }
 }
+
 export async function POST(request: Request) {
   try {
     const data = await request.json();
@@ -22,16 +23,20 @@ export async function POST(request: Request) {
         { status: 400 }
       );
     }
-    const newTask = await prisma.task
-      .create({
+
+    // Fix the Prisma create syntax
+    const newTask = await prisma.task.create({
+      data: {
         title: data.title,
-        description: data.description,
-        userId: data.userId,
-        dueDate: data.dueDate,
-      })
-      .returning();
+        description: data.description || "",
+        userId: parseInt(data.userId),
+        dueDate: data.dueDate ? new Date(data.dueDate) : new Date(),
+        status: data.status || "IN_PROGRESS",
+      },
+    });
+
     return NextResponse.json(
-      { message: "Task created successfully", task: newTask[0] },
+      { message: "Task created successfully", task: newTask },
       { status: 201 }
     );
   } catch (error) {
