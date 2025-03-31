@@ -1,37 +1,107 @@
 "use client";
 
-export default function Task() {
+import { useState } from "react";
+import { TaskStatus } from "@prisma/client";
+import { formatDistanceToNow } from "date-fns";
+import { useRouter } from "next/navigation";
+import { markTaskStatus, deleteTask } from "../actions/tasks";
+
+interface TaskProps {
+  task: {
+    id: number;
+    title: string;
+    description: string;
+    dueDate: Date;
+    status: TaskStatus;
+    userId: number;
+  };
+}
+
+export default function Task({ task }: TaskProps) {
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
+  const router = useRouter();
+
+  // Handle status change through dropdown
+  const handleStatusChange = async (newStatus: TaskStatus) => {
+    if (newStatus === task.status) return;
+
+    setIsUpdating(true);
+    try {
+      await markTaskStatus(task.id, newStatus);
+      router.refresh();
+    } catch (error) {
+      console.error("Failed to update task status:", error);
+    } finally {
+      setIsUpdating(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (confirm("Are you sure you want to delete this task?")) {
+      setIsDeleting(true);
+      try {
+        await deleteTask(task.id);
+        router.refresh();
+      } catch (error) {
+        console.error("Failed to delete task:", error);
+        setIsDeleting(false);
+      }
+    }
+  };
+
+  const handleEdit = () => {
+    router.push(`/dashboard/edit-task/${task.id}`);
+  };
+
+  // Format due date for display
+  const formattedDueDate = task.dueDate
+    ? formatDistanceToNow(new Date(task.dueDate), { addSuffix: true })
+    : "No due date";
+
   return (
-    <div id="task" className="flex flex-col w-full">
-      <div id="taskName" className="font-medium text-lg">
-        task name
-      </div>
+    <div className="flex flex-col w-full">
+      <div className="font-medium text-lg">{task.title}</div>
+
       <div className="flex flex-row justify-between items-center w-full">
         <div className="flex flex-col">
-          <div id="descriotion" className="text-sm text-gray-300">
-            task description
-          </div>
-          <div id="dueDate" className="text-xs text-gray-400">
-            Due date: 17/12/2111
-          </div>
+          <div className="text-sm text-gray-300">{task.description}</div>
+          <div className="text-xs text-gray-400">Due {formattedDueDate}</div>
         </div>
 
-        <div id="taskActions" className="flex flex-row gap-2">
-          <button className="cursor-pointer bg-green-500/30 text-black rounded px-2  button-hover">
-            Done
-          </button>
+        <div className="flex flex-row gap-2">
+          {/* Status dropdown button */}
+          <div className="relative">
+            <select
+              value={task.status}
+              onChange={(e) => handleStatusChange(e.target.value as TaskStatus)}
+              disabled={isUpdating}
+              className={`cursor-pointer text-sm px-2 py-1 rounded appearance-none ${
+                task.status === TaskStatus.COMPLETED
+                  ? "bg-green-800/70"
+                  : task.status === TaskStatus.PENDING
+                  ? "bg-yellow-800/70"
+                  : "bg-blue-800/70"
+              }`}
+            >
+              <option value={TaskStatus.IN_PROGRESS}>In Progress</option>
+              <option value={TaskStatus.COMPLETED}>Completed</option>
+              <option value={TaskStatus.PENDING}>Pending</option>
+            </select>
+          </div>
+
           <button
-            id="edit"
-            className="cursor-pointer  text-black px-2 bg-neutral-500/30 rounded button-hover"
+            onClick={handleEdit}
+            className="cursor-pointer text-sm px-2 py-1 bg-neutral-700 rounded hover:bg-neutral-600"
           >
             Edit
           </button>
-
           <button
-            id="delete"
-            className="cursor-pointer text-black bg-red-500/30 text-sm px-2  rounded button-hover"
+            onClick={handleDelete}
+            disabled={isDeleting}
+            className="cursor-pointer border border-red-800 text-sm px-2 py-1 rounded hover:bg-red-900/30"
           >
-            X
+            🗑️
           </button>
         </div>
       </div>

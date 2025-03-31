@@ -1,9 +1,8 @@
-export interface TaskType {
-  id: number;
-  createdAt: number;
+import { TaskStatus } from "@prisma/client";
+
+export type TaskData = {
   title: string;
   description: string;
-  dueDate: number;
-  status: boolean;
-  user: string;
-}
+  dueDate: Date | string;
+  status?: TaskStatus; // Optional since it has a default
+};

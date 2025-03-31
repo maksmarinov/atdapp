@@ -28,8 +28,8 @@ const SignInSchema = z.object({
   email: z.string().min(1, { message: "Please enter your email" }),
 });
 
-export type signUpSchema = z.infer<typeof SignUpSchema>;
-export type signInSchema = z.infer<typeof SignInSchema>;
+export type SignInData = z.infer<typeof SignUpSchema>;
+export type SignUpData = z.infer<typeof SignInSchema>;
 
 export type ActionResponse = {
   success: boolean;
