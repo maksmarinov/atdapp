@@ -1,13 +1,13 @@
 import { NextResponse } from "next/server";
 import prisma from "@/app/lib/prisma";
-import { NextRequest } from "next/server";
 
+// Changed parameter structure to match Next.js requirements
 export async function GET(
-  request: NextRequest,
-  { params }: { params: { id: string } }
+  request: Request,
+  context: { params: { id: string } }
 ) {
   try {
-    const id = parseInt(params.id);
+    const id = parseInt(context.params.id);
 
     if (isNaN(id)) {
       return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
