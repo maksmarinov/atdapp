@@ -1,24 +1,14 @@
 "use client";
 
+import { Task, TaskStatus } from "@prisma/client";
 import { useActionState } from "react";
 import { useRouter } from "next/navigation";
 import { createTask, editTask, ActionResponse } from "../actions/tasks";
 import { useState } from "react";
-import { TaskStatus } from "@prisma/client";
-
-interface Task {
-  id: number;
-  createdAt: Date;
-  title: string;
-  description: string;
-  dueDate: Date;
-  status: TaskStatus;
-  userId: number;
-}
 
 interface TaskFormProps {
   task?: Task;
-  userId: string | number; // Accept both string and number
+  userId: string | number;
   isEditing?: boolean;
 }
 
@@ -30,7 +20,7 @@ const initialState: ActionResponse = {
 
 export default function TaskForm({
   task,
-  userId, // Make sure this prop is passed from the parent
+  userId,
   isEditing = false,
 }: TaskFormProps) {
   const router = useRouter();
@@ -43,12 +33,12 @@ export default function TaskForm({
       description: formData.get("description") as string,
       dueDate: formData.get("dueDate")
         ? new Date(formData.get("dueDate") as string)
-        : new Date(Date.now() + 24 * 60 * 60 * 1000), // Default to tomorrow if no date
+        : new Date(Date.now() + 24 * 60 * 60 * 1000),
       status: (formData.get("status") as TaskStatus) || TaskStatus.IN_PROGRESS,
-      userId: Number(userId), // Convert to number and include in submission
+      userId: Number(userId),
     };
 
-    console.log("Submitting task data:", data); // Add logging
+    console.log("Submitting task data:", data);
 
     if (isEditing && task) {
       return await editTask(task.id, data);
