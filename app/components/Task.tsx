@@ -54,7 +54,6 @@ export default function Task({ task }: TaskProps) {
     router.push(`/dashboard/edit-task/${task.id}`);
   };
 
-  // Format due date for display
   const formattedDueDate = task.dueDate
     ? formatDistanceToNow(new Date(task.dueDate), { addSuffix: true })
     : "No due date";

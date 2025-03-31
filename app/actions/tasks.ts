@@ -23,7 +23,6 @@ export type ActionResponse = {
 
 export async function createTask(data: TaskData): Promise<ActionResponse> {
   try {
-    // Debug logging
     console.log("Creating task with data:", data);
 
     const user = await getCurrentUser();
@@ -47,7 +46,6 @@ export async function createTask(data: TaskData): Promise<ActionResponse> {
 
     const validData = validateData.data;
 
-    // Ensure we have a user ID
     const task = await prisma.task.create({
       data: {
         title: validData.title,
@@ -89,7 +87,6 @@ export async function editTask(
       };
     }
 
-    // Validate the task belongs to the user
     const existingTask = await prisma.task.findFirst({
       where: {
         id: id,
@@ -125,7 +122,6 @@ export async function editTask(
     if (validData.dueDate !== undefined) updateData.dueDate = validData.dueDate;
     if (validData.status !== undefined) updateData.status = validData.status;
 
-    // Prisma update operation
     await prisma.task.update({
       where: {
         id: id,
@@ -159,7 +155,6 @@ export async function markTaskAsDone(
       };
     }
 
-    // Validate the task belongs to the user
     const existingTask = await prisma.task.findFirst({
       where: {
         id: id,
@@ -212,7 +207,6 @@ export async function deleteTask(id: number): Promise<ActionResponse> {
       };
     }
 
-    // Validate the task belongs to the user
     const existingTask = await prisma.task.findFirst({
       where: {
         id: id,
@@ -228,7 +222,6 @@ export async function deleteTask(id: number): Promise<ActionResponse> {
       };
     }
 
-    // Delete the task
     await prisma.task.delete({
       where: {
         id: id,
@@ -261,7 +254,6 @@ export async function markTaskStatus(
       };
     }
 
-    // Validate the task belongs to the user
     const existingTask = await prisma.task.findFirst({
       where: {
         id: id,

@@ -27,36 +27,36 @@ export default function SlidingMenu() {
         </div>
 
         <ul className="space-y-4 text-white">
-          <li
-            className={`font-bold ${
-              pathname === "/dashboard"
-                ? "bg-neutral-950 text-green-700 px-2 py-1 rounded"
-                : "underline"
-            }`}
-          >
-            <Link href="/dashboard">Dashboard</Link>
+          <li className="font-bold px-2 py-1 rounded">
+            <Link
+              href="/dashboard"
+              className={
+                pathname === "/dashboard" ? "text-green-700" : "underline"
+              }
+            >
+              Dashboard
+            </Link>
           </li>
-          <li
-            className={`font-bold ${
-              pathname === "/game"
-                ? "bg-neutral-950 text-green-700 px-2 py-1 rounded"
-                : "underline"
-            }`}
-          >
-            <Link href="/game">Play Bulls and Cows</Link>
+          <li className="font-bold px-2 py-1 rounded">
+            <Link
+              href="/game"
+              className={pathname === "/game" ? "text-green-700" : "underline"}
+            >
+              Play Bulls and Cows
+            </Link>
           </li>
-          <li
-            className={`font-bold ${
-              pathname === "/profile"
-                ? "bg-neutral-950 text-green-700 px-2 py-1 rounded"
-                : "underline"
-            }`}
-          >
-            <Link href="/profile">Profile</Link>
+          <li className="font-bold px-2 py-1 rounded">
+            <Link
+              href="/profile"
+              className={
+                pathname === "/profile" ? "text-green-700" : "underline"
+              }
+            >
+              Profile
+            </Link>
           </li>
         </ul>
 
-        {/* Positioned at the right edge of the menu */}
         <div
           id="gradientSlide"
           className="absolute top-0 right-0 h-full w-2 gradient-slide z-10"
