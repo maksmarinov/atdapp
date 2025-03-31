@@ -1,13 +1,18 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/app/lib/prisma";
 
-// Fixed parameter structure according to Next.js docs
+interface RouteContext {
+  params: {
+    id: string;
+  };
+}
+
 export async function GET(
-  request: Request,
-  { params }: { params: { id: string } } // CHANGED: Destructuring here is required
+  request: NextRequest, // Changed from Request to NextRequest
+  context: RouteContext // Using the defined interface instead of inline destructuring
 ) {
   try {
-    const id = parseInt(params.id);
+    const id = parseInt(context.params.id);
 
     if (isNaN(id)) {
       return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
@@ -22,9 +27,10 @@ export async function GET(
     }
 
     return NextResponse.json(task);
-  } catch {
+  } catch (error) {
+    console.error("Error fetching task:", error);
     return NextResponse.json(
-      { error: "Failed to fetch task" }, // Removed full error object
+      { error: "Failed to fetch task" },
       { status: 500 }
     );
   }
