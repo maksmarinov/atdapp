@@ -1,29 +1,42 @@
-import { getCurrentUser } from "../lib/utils";
+"use client";
 import SlidingMenu from "../components/SlidingMenu";
-import { redirect } from "next/navigation";
+import PlayerPanel from "../components/PlayerPanel";
+import BotPanel from "../components/BotPanel";
+import { deleteCookie } from "cookies-next";
 
-// Add this export to mark the route as dynamic
-export const dynamic = "force-dynamic";
+export default function Game() {
+  const handleNewGame = () => {
+    // Clear cookies
+    deleteCookie("playerNumber");
+    deleteCookie("computerNumber");
+    deleteCookie("gameStarted");
 
-export default async function Game() {
-  // Get user with proper type safety
-  const user = await getCurrentUser();
+    // Clear localStorage
+    localStorage.removeItem("guessHistory");
+    localStorage.removeItem("latestGuess");
 
-  // Add null check and redirect if no user
-  if (!user) {
-    redirect("/login?next=/game");
-  }
+    // Simply reload the page to start fresh
+    window.location.reload();
+  };
 
   return (
     <div className="min-h-screen">
       <SlidingMenu />
       <div className="flex flex-col ml-[4rem] p-6">
-        <h1 className="text-2xl mb-6">Bulls and Cows Game</h1>
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-2xl">Bulls and Cows Game</h1>
+          <button
+            onClick={handleNewGame}
+            className="px-6 py-2 bg-red-600 hover:bg-red-700 rounded text-white"
+          >
+            New Game
+          </button>
+        </div>
         <div className="bg-neutral-800 p-4 rounded-lg shadow">
-          <div className="text-xl mb-4">
-            {user.name} score: {user.score}
+          <div className="flex flex-row text-xl mb-4 justify-between">
+            <PlayerPanel />
+            <BotPanel />
           </div>
-          <div className="text-gray-300">Game content goes here...</div>
         </div>
       </div>
     </div>

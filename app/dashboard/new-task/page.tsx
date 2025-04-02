@@ -2,7 +2,6 @@ import { getCurrentUser } from "../../lib/utils";
 import TaskForm from "../../components/TaskForm";
 
 export default async function CreateTaskPage() {
-  // Updated function name for clarity
   const user = await getCurrentUser();
 
   if (!user) {
