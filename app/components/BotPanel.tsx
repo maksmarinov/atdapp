@@ -2,7 +2,14 @@
 import { useState, useEffect, useCallback } from "react";
 import { getCookie } from "cookies-next";
 
-export default function BotPanel() {
+// Define proper interface for props
+interface BotPanelProps {
+  onBotWin: () => void;
+  gameOver: boolean;
+  onWaitingChange: (isWaiting: boolean) => void;
+}
+
+export default function BotPanel({ onBotWin, onWaitingChange }: BotPanelProps) {
   const [botGuesses, setBotGuesses] = useState([]);
   const [playerResponses, setPlayerResponses] = useState([]);
   const [guessResponses, setGuessResponses] = useState([]);
@@ -277,6 +284,20 @@ export default function BotPanel() {
       makeBotGuess();
     }
   }, [possibleNumbers, botGuesses, waitingForResponse, makeBotGuess]);
+
+  // Notify the parent component when waiting state changes
+  useEffect(() => {
+    if (onWaitingChange) {
+      onWaitingChange(waitingForResponse);
+    }
+  }, [waitingForResponse, onWaitingChange]);
+
+  // Make sure to call onBotWin when appropriate
+  useEffect(() => {
+    if (botWon && onBotWin) {
+      onBotWin();
+    }
+  }, [botWon, onBotWin]);
 
   // Rest of your component remains unchanged
   return (

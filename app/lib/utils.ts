@@ -106,6 +106,28 @@ export async function getAllTasks() {
     throw new Error("Failed to fetch tasks");
   }
 }
+export const getUserScore = cache(async () => {
+  try {
+    // First get the current user
+    const currentUser = await getCurrentUser();
+    if (!currentUser) return null;
+
+    // Fetch the user with their score
+    const user = await prisma.user.findUnique({
+      where: {
+        id: currentUser.id,
+      },
+      select: {
+        score: true,
+      },
+    });
+
+    return user?.score || 0;
+  } catch (error) {
+    console.error("Failed to get score:", error);
+    return 0;
+  }
+});
 
 export function slugify(text: string) {
   return text

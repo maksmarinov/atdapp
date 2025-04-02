@@ -77,8 +77,8 @@ export default function Task({ task }: TaskProps) {
               disabled={isUpdating}
               className={`cursor-pointer text-sm px-2 py-1 rounded appearance-none ${
                 task.status === TaskStatus.COMPLETED
-                  ? "bg-green-800/70"
-                  : "bg-blue-800/70"
+                  ? "bg-black/70"
+                  : "bg-emerald-600/70"
               }`}
             >
               <option value={TaskStatus.IN_PROGRESS}>In Progress</option>
@@ -97,7 +97,7 @@ export default function Task({ task }: TaskProps) {
             disabled={isDeleting}
             className="cursor-pointer  bg-red-800/40 text-sm px-2 py-1 rounded hover:bg-red-700/70"
           >
-            🗑️
+            Delete
           </button>
         </div>
       </div>

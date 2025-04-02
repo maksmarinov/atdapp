@@ -12,7 +12,8 @@ export default function SlidingMenu() {
     <div>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed top-5 text-2xl font-extrabold text-green-700 left-1 z-50 bg-neutral-900 py-1 px-2 cursor-pointer rounded-lg"
+        className="fixed top-5 text-2xl font-extrabold left-1 z-50 bg-neutral-900 py-1 px-2 cursor-pointer rounded-sm"
+        style={{ color: "#80ED99" }}
       >
         {isOpen ? "X" : "☰"}
       </button>
@@ -22,35 +23,44 @@ export default function SlidingMenu() {
           isOpen ? "translate-x-0" : "-translate-x-8/10"
         } z-40`}
       >
-        <div className="py-10 font-extrabold text-white text-6xl mb-8">
+        <div
+          className="py-10 font-extrabold text-6xl mb-8"
+          style={{ color: "#C7F9CC" }}
+        >
           menu
         </div>
 
-        <ul className="space-y-4 text-white">
-          <li className="font-bold px-2 py-1 rounded">
+        <ul className="space-y-4" style={{ color: "#C7F9CC" }}>
+          <li className="font-bold px-2 py-1 rounded-sm">
             <Link
               href="/dashboard"
-              className={
-                pathname === "/dashboard" ? "text-green-700" : "underline"
-              }
+              style={{
+                color: pathname === "/dashboard" ? "#57CC99" : "#C7F9CC",
+                textDecoration:
+                  pathname === "/dashboard" ? "none" : "underline",
+              }}
             >
               Dashboard
             </Link>
           </li>
-          <li className="font-bold px-2 py-1 rounded">
+          <li className="font-bold px-2 py-1 rounded-sm">
             <Link
               href="/game"
-              className={pathname === "/game" ? "text-green-700" : "underline"}
+              style={{
+                color: pathname === "/game" ? "#57CC99" : "#C7F9CC",
+                textDecoration: pathname === "/game" ? "none" : "underline",
+              }}
             >
               Play Bulls and Cows
             </Link>
           </li>
-          <li className="font-bold px-2 py-1 rounded">
+          <li className="font-bold px-2 py-1 rounded-sm">
             <Link
               href="/profile"
-              className={
-                pathname === "/profile" ? "text-green-700" : "underline"
-              }
+              style={{
+                color: pathname === "/profile" ? "#57CC99" : "#C7F9CC",
+                textDecoration: pathname === "/profile" ? "none" : "underline",
+              }}
             >
               Profile
             </Link>
