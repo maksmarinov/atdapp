@@ -79,9 +79,9 @@ export default function Game() {
   };
 
   return (
-    <div className=" min-w-120">
+    <div className=" min-w-100">
       <SlidingMenu />
-      <div className="flex flex-col ml-[4rem] p-6">
+      <div className="flex flex-col ml-[2rem] p-6">
         <div className="flex justify-between items-center mb-6">
           <button
             onClick={handleNewGame}
@@ -98,7 +98,7 @@ export default function Game() {
           <ScoreDisplay />
         </div>
 
-        <div className="bg-neutral-800 p-4 h-1/4 max-h-screen rounded-lg shadow">
+        <div className="bg-neutral-800  p-2 h-1/4 max-h-screen rounded-lg shadow">
           <div className="flex flex-row text-xl mb-4 justify-between">
             <PlayerPanel
               onPlayerWin={handlePlayerWin}

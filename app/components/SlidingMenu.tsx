@@ -1,24 +1,66 @@
 "use client";
 import { signOut } from "../actions/authenticate";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 export default function SlidingMenu() {
   const [isOpen, setIsOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
   const pathname = usePathname();
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent | TouchEvent) => {
+      if (
+        buttonRef.current &&
+        buttonRef.current.contains(event.target as Node)
+      ) {
+        return;
+      }
+
+      if (
+        isOpen &&
+        menuRef.current &&
+        !menuRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("touchstart", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
+    };
+  }, [isOpen]);
+
   return (
-    <div>
+    <>
+      {/* Transparent overlay to capture touches outside menu */}
+      {isOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-30 z-30"
+          onClick={() => setIsOpen(false)}
+          aria-hidden="true"
+        />
+      )}
+
       <button
+        ref={buttonRef}
         onClick={() => setIsOpen(!isOpen)}
         className="fixed top-5 text-2xl font-extrabold left-1 z-50 bg-neutral-900 py-1 px-2 cursor-pointer rounded-sm"
         style={{ color: "#80ED99" }}
+        aria-label={isOpen ? "Close menu" : "Open menu"}
+        aria-expanded={isOpen}
       >
         {isOpen ? "X" : "☰"}
       </button>
 
       <div
+        ref={menuRef}
         className={`fixed top-0 left-0 h-screen w-64 bg-neutral-900 p-10 transform transition-transform duration-300 ease-in-out ${
           isOpen ? "translate-x-0" : "-translate-x-8/10"
         } z-40`}
@@ -39,6 +81,7 @@ export default function SlidingMenu() {
                 textDecoration:
                   pathname === "/dashboard" ? "none" : "underline",
               }}
+              onClick={() => setIsOpen(false)}
             >
               Dashboard
             </Link>
@@ -50,6 +93,7 @@ export default function SlidingMenu() {
                 color: pathname === "/game" ? "#57CC99" : "#C7F9CC",
                 textDecoration: pathname === "/game" ? "none" : "underline",
               }}
+              onClick={() => setIsOpen(false)}
             >
               Play Bulls&Cows
             </Link>
@@ -61,6 +105,7 @@ export default function SlidingMenu() {
                 color: pathname === "/profile" ? "#57CC99" : "#C7F9CC",
                 textDecoration: pathname === "/profile" ? "none" : "underline",
               }}
+              onClick={() => setIsOpen(false)}
             >
               Profile
             </Link>
@@ -80,6 +125,6 @@ export default function SlidingMenu() {
           className="absolute top-0 right-0 h-full w-2 gradient-slide z-10"
         ></div>
       </div>
-    </div>
+    </>
   );
 }

@@ -330,7 +330,7 @@ const BotPanel = forwardRef<any, BotPanelProps>(
         style={{ borderColor: "#38A3A5" }}
       >
         <div
-          className="text-xl font-semibold py-2"
+          className="text-md font-semibold py-2"
           style={{ color: "#57CC99" }}
         >
           bot
@@ -343,7 +343,7 @@ const BotPanel = forwardRef<any, BotPanelProps>(
               className="mb-4 p-2 rounded-lg w-full max-w-md text-center"
               style={{ backgroundColor: "#80ED99", color: "#22577A" }}
             >
-              <p className="text-xl font-bold">You WON!</p>
+              <p className="text-md font-bold">You WON!</p>
             </div>
           )}
 

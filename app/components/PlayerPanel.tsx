@@ -333,7 +333,7 @@ export default function PlayerPanel({
                 <button
                   onClick={handleGuessSubmit}
                   disabled={!isGuessValid || gameOver || botIsWaiting}
-                  className="mt-2 px-4 py-2 text-sm rounded-sm font-bold w-auto"
+                  className="mt-2 px-2 py-2 text-sm rounded-sm font-bold w-auto"
                   style={{
                     backgroundColor:
                       isGuessValid && !gameOver && !botIsWaiting
@@ -373,7 +373,7 @@ export default function PlayerPanel({
                 >
                   <h3 className="text-sm font-semibold mb-2">Your guesses:</h3>
                   <div
-                    className="max-h-72 overflow-y-auto pr-2 border rounded-lg p-3"
+                    className="max-h-72 overflow-y-auto pr-2 border rounded-lg"
                     style={{ borderColor: "#38A3A510" }}
                   >
                     {guessHistory.map((g, index) => (
