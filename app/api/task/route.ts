@@ -24,7 +24,6 @@ export async function POST(request: Request) {
       );
     }
 
-    // Fix the Prisma create syntax
     const newTask = await prisma.task.create({
       data: {
         title: data.title,

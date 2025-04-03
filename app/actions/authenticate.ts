@@ -95,7 +95,7 @@ export async function signUp(formData: FormData) {
     const password = formData.get("password") as string;
     const password2 = formData.get("password2") as string;
 
-    console.log("Processing signup for:", email); // Logging
+    console.log("Processing signup for:", email);
 
     if (!email || !username || !name || !password) {
       return {

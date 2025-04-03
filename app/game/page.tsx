@@ -17,38 +17,30 @@ export default function Game() {
   const botPanelRef = useRef(null);
   const [latestPlayerGuess, setLatestPlayerGuess] = useState(null);
 
-  // Handle player winning
   const handlePlayerWin = () => {
     setPlayerWon(true);
     setGameOver(true);
   };
 
-  // Handle bot winning
   const handleBotWin = () => {
     setBotWon(true);
     setGameOver(true);
   };
 
-  // Track when the bot is waiting for player input
   const handleBotWaitingChange = (isWaiting) => {
     setWaitingForBotResponse(isWaiting);
   };
 
-  // Handle player guess - this will trigger the bot to make a guess
   const handlePlayerGuess = (guessData) => {
-    // Store the latest guess for BotPanel
     setLatestPlayerGuess(guessData);
 
-    // Store in localStorage for game state persistence
     localStorage.setItem("latestGuess", JSON.stringify(guessData));
 
-    // If game is not over and bot panel exists, trigger bot to make a guess
     if (!gameOver && botPanelRef.current && !waitingForBotResponse) {
       botPanelRef.current.makeGuess();
     }
   };
 
-  // Update score when game ends
   useEffect(() => {
     const updateScore = async () => {
       if (gameOver && (playerWon || botWon) && !scoreUpdated.current) {
@@ -112,12 +104,12 @@ export default function Game() {
               onPlayerWin={handlePlayerWin}
               gameOver={gameOver}
               botIsWaiting={waitingForBotResponse}
-              onPlayerGuess={handlePlayerGuess} // New prop for direct communication
+              onPlayerGuess={handlePlayerGuess}
             />
             <BotPanel
-              ref={botPanelRef} // Ref to call methods on the BotPanel
+              ref={botPanelRef}
               onBotWin={handleBotWin}
-              onPlayerWin={handlePlayerWin} // Add this
+              onPlayerWin={handlePlayerWin}
               gameOver={gameOver}
               onWaitingChange={handleBotWaitingChange}
               latestPlayerGuess={latestPlayerGuess}

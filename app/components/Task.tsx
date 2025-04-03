@@ -22,7 +22,6 @@ export default function Task({ task }: TaskProps) {
   const [isUpdating, setIsUpdating] = useState(false);
   const router = useRouter();
 
-  // Handle status change through dropdown
   const handleStatusChange = async (newStatus: TaskStatus) => {
     if (newStatus === task.status) return;
 

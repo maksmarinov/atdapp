@@ -7,7 +7,7 @@ interface PlayerPanelProps {
   onPlayerWin: () => void;
   gameOver: boolean;
   botIsWaiting: boolean;
-  onPlayerGuess: (guessData: any) => void; // Add this prop
+  onPlayerGuess: (guessData: any) => void;
 }
 
 export default function PlayerPanel({
@@ -53,7 +53,6 @@ export default function PlayerPanel({
         if (savedCombinations) {
           setPossibleCombinations(JSON.parse(savedCombinations));
         } else {
-          // Initialize with all possible combinations
           setPossibleCombinations(generateAllValidNumbers());
         }
       } catch (error) {
@@ -62,17 +61,13 @@ export default function PlayerPanel({
     }
   }, []);
 
-  // Generate all valid 4-digit numbers with unique digits
   const generateAllValidNumbers = () => {
     const validNumbers = [];
-    // Start from 1023 (smallest possible) to 9876 (largest possible)
     for (let i = 1023; i <= 9876; i++) {
       const numStr = i.toString();
 
-      // Skip numbers with repeated digits
       if (new Set(numStr).size !== 4) continue;
 
-      // Skip numbers with leading zero (should already be caught by our range)
       if (numStr[0] === "0") continue;
 
       validNumbers.push(numStr);
@@ -80,7 +75,6 @@ export default function PlayerPanel({
     return validNumbers;
   };
 
-  // Initialize possible combinations when the game starts
   useEffect(() => {
     if (gameStarted && possibleCombinations.length === 0) {
       setPossibleCombinations(generateAllValidNumbers());
@@ -133,7 +127,6 @@ export default function PlayerPanel({
       setComputerNumber(randomNumber);
       setGameStarted(true);
 
-      // Initialize possible combinations
       const allPossible = generateAllValidNumbers();
       setPossibleCombinations(allPossible);
       localStorage.setItem("playerPossibilities", JSON.stringify(allPossible));
@@ -183,13 +176,10 @@ export default function PlayerPanel({
     return { bulls, cows };
   };
 
-  // Update possible combinations based on a guess result
   const updatePossibleCombinations = (currentGuess, bulls, cows) => {
     setPossibleCombinations((prevPossible) => {
-      // Filter out the current guess
       const filtered = prevPossible.filter((num) => num !== currentGuess);
 
-      // Filter to keep only numbers that would give the same feedback
       return filtered.filter((candidate) => {
         const feedback = calculateBullsAndCows(currentGuess, candidate);
         return feedback.bulls === bulls && feedback.cows === cows;
@@ -211,10 +201,8 @@ export default function PlayerPanel({
       const updatedHistory = [...guessHistory, guessResult];
       setGuessHistory(updatedHistory);
 
-      // Update possible combinations
       updatePossibleCombinations(guess, bulls, cows);
 
-      // Store updated possibilities
       localStorage.setItem(
         "playerPossibilities",
         JSON.stringify(
@@ -229,14 +217,12 @@ export default function PlayerPanel({
 
       localStorage.setItem("guessHistory", JSON.stringify(updatedHistory));
 
-      // Call the parent callback to notify about the guess
       if (onPlayerGuess) {
         onPlayerGuess(guessResult);
       }
 
       setGuess("");
 
-      // Check for win condition
       if (bulls === 4 && onPlayerWin) {
         onPlayerWin();
       }
@@ -325,6 +311,7 @@ export default function PlayerPanel({
               <div className="flex flex-col items-center justify-center w-full">
                 <input
                   type="text"
+                  inputMode="numeric"
                   maxLength={4}
                   value={guess}
                   onChange={handleGuessChange}

@@ -108,11 +108,9 @@ export async function getAllTasks() {
 }
 export const getUserScore = cache(async () => {
   try {
-    // First get the current user
     const currentUser = await getCurrentUser();
     if (!currentUser) return null;
 
-    // Fetch the user with their score
     const user = await prisma.user.findUnique({
       where: {
         id: currentUser.id,

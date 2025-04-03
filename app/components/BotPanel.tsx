@@ -9,10 +9,9 @@ import {
 } from "react";
 import { getCookie } from "cookies-next";
 
-// Update the props interface to include onPlayerWin
 interface BotPanelProps {
   onBotWin: () => void;
-  onPlayerWin: () => void; // Add this prop
+  onPlayerWin: () => void;
   gameOver: boolean;
   onWaitingChange: (isWaiting: boolean) => void;
   latestPlayerGuess?: {
@@ -28,7 +27,6 @@ const BotPanel = forwardRef<any, BotPanelProps>(
     { onBotWin, onPlayerWin, gameOver, onWaitingChange, latestPlayerGuess },
     ref
   ) => {
-    // Add a specific state to track if player has won
     const [playerWon, setPlayerWon] = useState(false);
 
     const [botGuesses, setBotGuesses] = useState([]);
@@ -43,9 +41,7 @@ const BotPanel = forwardRef<any, BotPanelProps>(
     const [cowsInput, setCowsInput] = useState("0");
     const [possibleNumbers, setPossibleNumbers] = useState([]);
 
-    // Make the makeBotGuess function available to the parent component
     useImperativeHandle(ref, () => ({
-      // This can be called by the parent as botPanelRef.current.makeGuess()
       makeGuess: () => {
         if (
           !waitingForResponse &&
@@ -58,23 +54,19 @@ const BotPanel = forwardRef<any, BotPanelProps>(
       },
     }));
 
-    // Calculate bulls and cows between two numbers
     const calculateFeedback = useCallback((guess, secret) => {
       let bulls = 0;
       let cows = 0;
 
-      // Calculate Bulls (right digit, right position)
       for (let i = 0; i < 4; i++) {
         if (guess[i] === secret[i]) {
           bulls++;
         }
       }
 
-      // Calculate total matching digits
       const guessDigits = guess.split("");
       const secretDigits = secret.split("");
 
-      // Count common digits using frequency counters
       const guessCount = {};
       const secretCount = {};
 
@@ -83,7 +75,6 @@ const BotPanel = forwardRef<any, BotPanelProps>(
         secretCount[secretDigits[i]] = (secretCount[secretDigits[i]] || 0) + 1;
       }
 
-      // Count total matches
       let totalMatches = 0;
       for (const digit in guessCount) {
         if (digit in secretCount) {
@@ -91,13 +82,11 @@ const BotPanel = forwardRef<any, BotPanelProps>(
         }
       }
 
-      // Cows = total matches - bulls
       cows = totalMatches - bulls;
 
       return { bulls, cows };
     }, []);
 
-    // Calculate bulls (matching position and digit)
     const calculateBulls = useCallback((guess, target) => {
       let count = 0;
       for (let i = 0; i < 4; i++) {
@@ -106,13 +95,11 @@ const BotPanel = forwardRef<any, BotPanelProps>(
       return count;
     }, []);
 
-    // Calculate cows (matching digit but wrong position)
     const calculateCows = useCallback((guess, target, bullsCount) => {
       const guessDigits = guess.split("");
       const targetDigits = target.split("");
       let matchCount = 0;
 
-      // Count matching digits
       for (let i = 0; i < 10; i++) {
         const digit = i.toString();
         matchCount += Math.min(
@@ -121,17 +108,14 @@ const BotPanel = forwardRef<any, BotPanelProps>(
         );
       }
 
-      // Subtract bulls to get cows
       return matchCount - bullsCount;
     }, []);
 
-    // Validate player's response for consistency
     const validatePlayerResponse = useCallback(
       (guess, bulls, cows) => {
         const playerNumber = getCookie("playerNumber");
-        if (!playerNumber) return true; // Can't validate without player number
+        if (!playerNumber) return true;
 
-        // For development, we can check against actual player number
         const actualBulls = calculateBulls(guess, playerNumber);
         const actualCows = calculateCows(guess, playerNumber, actualBulls);
 
@@ -140,19 +124,14 @@ const BotPanel = forwardRef<any, BotPanelProps>(
       [calculateBulls, calculateCows]
     );
 
-    // Update the list of possible numbers based on feedback
     const updatePossibilities = useCallback(
       (guess, bulls, cows) => {
         setPossibleNumbers((prevPossibilities) => {
-          // Filter the list to only include numbers that would give the same feedback
           return prevPossibilities.filter((candidate) => {
-            // Don't compare against the guess itself
             if (candidate === guess) return false;
 
-            // Calculate what feedback would be if this was the secret
             const feedback = calculateFeedback(guess, candidate);
 
-            // Keep only numbers that match the given feedback
             return feedback.bulls === bulls && feedback.cows === cows;
           });
         });
@@ -160,12 +139,8 @@ const BotPanel = forwardRef<any, BotPanelProps>(
       [calculateFeedback]
     );
 
-    // Make a bot guess based on current strategy
     const makeBotGuess = useCallback(() => {
-      // If there are no more possibilities, just pick a random 4-digit number
-      // This is a fallback and should rarely happen in normal gameplay
       if (possibleNumbers.length === 0) {
-        // Generate a valid guess instead of showing an error
         let digits = [1, 2, 3, 4, 5, 6, 7, 8, 9];
         digits = digits.sort(() => Math.random() - 0.5).slice(0, 4);
         if (digits[0] === 0) [digits[0], digits[3]] = [digits[3], digits[0]];
@@ -177,7 +152,6 @@ const BotPanel = forwardRef<any, BotPanelProps>(
         return;
       }
 
-      // Choose a random guess from remaining possibilities
       const randomIndex = Math.floor(Math.random() * possibleNumbers.length);
       const guess = possibleNumbers[randomIndex];
 
@@ -186,13 +160,10 @@ const BotPanel = forwardRef<any, BotPanelProps>(
       setWaitingForResponse(true);
     }, [possibleNumbers]);
 
-    // Handle player's response to bot's guess
     const handlePlayerResponse = useCallback(() => {
-      // Parse input values
       const bullsValue = parseInt(bullsInput);
       const cowsValue = parseInt(cowsInput);
 
-      // Validate the values
       if (
         isNaN(bullsValue) ||
         isNaN(cowsValue) ||
@@ -205,13 +176,10 @@ const BotPanel = forwardRef<any, BotPanelProps>(
         return;
       }
 
-      // Update the bulls state value
       setBulls(bullsValue);
-      // We don't need to set cows state separately as we use the value directly
 
       const response = { guess: botGuess, bulls: bullsValue, cows: cowsValue };
 
-      // Validate response against player's number
       const isValid = validatePlayerResponse(botGuess, bullsValue, cowsValue);
       if (!isValid) {
         setInvalidResponse(true);
@@ -220,13 +188,11 @@ const BotPanel = forwardRef<any, BotPanelProps>(
 
       setPlayerResponses((prev) => [...prev, response]);
 
-      // Store responses in localStorage for persistence
       localStorage.setItem(
         "botResponses",
         JSON.stringify([...playerResponses, response])
       );
 
-      // Check for win condition - 4 bulls means the bot guessed correctly
       if (bullsValue === 4) {
         if (onBotWin) {
           console.log("Bot has won! Calling onBotWin");
@@ -241,13 +207,11 @@ const BotPanel = forwardRef<any, BotPanelProps>(
         return;
       }
 
-      // Update our list of possible numbers based on this feedback
       updatePossibilities(botGuess, bullsValue, cowsValue);
 
       setInvalidResponse(false);
       setWaitingForResponse(false);
 
-      // Reset for next guess
       setBullsInput("0");
       setCowsInput("0");
     }, [
@@ -260,18 +224,14 @@ const BotPanel = forwardRef<any, BotPanelProps>(
       playerResponses,
     ]);
 
-    // Generate all valid numbers (4-digit numbers with unique digits, non-zero first digit)
     useEffect(() => {
       const generateAllValidNumbers = () => {
         const validNumbers = [];
-        // Start from 1023 (smallest possible) to 9876 (largest possible)
         for (let i = 1023; i <= 9876; i++) {
           const numStr = i.toString();
 
-          // Skip numbers with repeated digits
           if (new Set(numStr).size !== 4) continue;
 
-          // Skip numbers with leading zero (should already be caught by our range)
           if (numStr[0] === "0") continue;
 
           validNumbers.push(numStr);
@@ -282,7 +242,6 @@ const BotPanel = forwardRef<any, BotPanelProps>(
       setPossibleNumbers(generateAllValidNumbers());
     }, []);
 
-    // Initialize bot's guess strategy on component mount
     useEffect(() => {
       const gameStarted = getCookie("gameStarted");
       const playerNumber = getCookie("playerNumber");
@@ -305,21 +264,18 @@ const BotPanel = forwardRef<any, BotPanelProps>(
       gameOver,
     ]);
 
-    // Notify the parent component when waiting state changes
     useEffect(() => {
       if (onWaitingChange) {
         onWaitingChange(waitingForResponse);
       }
     }, [waitingForResponse, onWaitingChange]);
 
-    // Make sure to call onBotWin when appropriate
     useEffect(() => {
       if (botWon && onBotWin) {
         onBotWin();
       }
     }, [botWon, onBotWin]);
 
-    // Reset input fields when waitingForResponse changes to true
     useEffect(() => {
       if (waitingForResponse) {
         setBullsInput("0");
@@ -327,8 +283,6 @@ const BotPanel = forwardRef<any, BotPanelProps>(
       }
     }, [waitingForResponse]);
 
-    // Watch for changes to latestPlayerGuess prop
-    // Function to generate response based on bulls and cows
     const generateResponse = useCallback((bulls: number, cows: number) => {
       return `${bulls} Bull${bulls === 1 ? "" : "s"}, ${cows} Cow${
         cows === 1 ? "" : "s"
@@ -337,7 +291,6 @@ const BotPanel = forwardRef<any, BotPanelProps>(
 
     useEffect(() => {
       if (latestPlayerGuess) {
-        // Check if we already have this guess in our responses
         const alreadyExists = guessResponses.some(
           (response) => response.timestamp === latestPlayerGuess.timestamp
         );
@@ -353,10 +306,9 @@ const BotPanel = forwardRef<any, BotPanelProps>(
 
           setGuessResponses((prev) => [...prev, response]);
 
-          // Check for player win condition
           if (latestPlayerGuess.bulls === 4) {
             console.log("Player has won! Calling onPlayerWin from BotPanel");
-            setPlayerWon(true); // Set the playerWon state
+            setPlayerWon(true);
 
             if (onPlayerWin && !gameOver) {
               onPlayerWin();
@@ -372,7 +324,6 @@ const BotPanel = forwardRef<any, BotPanelProps>(
       gameOver,
     ]);
 
-    // Rest of your component remains unchanged
     return (
       <div
         className="flex flex-col w-1/2 h-1/4 max-h-screen border-l text-center items-center"
@@ -437,7 +388,7 @@ const BotPanel = forwardRef<any, BotPanelProps>(
                     type="text"
                     inputMode="numeric"
                     maxLength={1}
-                    value={bullsInput}
+                    value=""
                     onChange={(e) => setBullsInput(e.target.value)}
                     className="w-12 border rounded text-center bg-black text-white"
                     style={{ borderColor: "#38A3A5" }}
@@ -454,7 +405,7 @@ const BotPanel = forwardRef<any, BotPanelProps>(
                     type="text"
                     inputMode="numeric"
                     maxLength={1}
-                    value={cowsInput}
+                    value=""
                     onChange={(e) => setCowsInput(e.target.value)}
                     className="w-12 border rounded text-center bg-black text-white"
                     style={{ borderColor: "#38A3A5" }}

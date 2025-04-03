@@ -5,7 +5,6 @@ import { jwtVerify } from "jose";
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // IMPORTANT: Skip auth check on authentication pages
   if (pathname.includes("/signin") || pathname.includes("/signup")) {
     return NextResponse.next();
   }
@@ -23,7 +22,6 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  // Protected routes - redirect to login if not authenticated
   if (
     (pathname.startsWith("/dashboard") ||
       pathname.startsWith("/game") ||

@@ -1,6 +1,6 @@
 import Task from "./Task";
 import { getCurrentUser } from "../lib/utils";
-import { getAllTasks } from "../lib/utils"; // Assuming this exists
+import { getAllTasks } from "../lib/utils";
 
 export default async function TaskList() {
   const user = await getCurrentUser();

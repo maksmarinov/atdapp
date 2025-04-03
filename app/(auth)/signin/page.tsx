@@ -17,7 +17,6 @@ export default function SigninPage() {
     const result = await signIn(userData);
 
     if (!result.success) {
-      // Show the message from the response
       toast.error(result.message || "Sign in failed");
     } else {
       toast.success("Sign in successful!");

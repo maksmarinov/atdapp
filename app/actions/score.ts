@@ -26,7 +26,6 @@ export async function updateUserScore(score: number): Promise<ActionResponse> {
         id: currentUser.id,
       },
       data: {
-        // Fixed: Added missing data wrapper
         score: score,
       },
     });
