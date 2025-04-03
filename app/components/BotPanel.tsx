@@ -37,8 +37,8 @@ const BotPanel = forwardRef<any, BotPanelProps>(
     const [bulls, setBulls] = useState(0);
     const [invalidResponse, setInvalidResponse] = useState(false);
     const [botWon, setBotWon] = useState(false);
-    const [bullsInput, setBullsInput] = useState("0");
-    const [cowsInput, setCowsInput] = useState("0");
+    const [bullsInput, setBullsInput] = useState("");
+    const [cowsInput, setCowsInput] = useState("");
     const [possibleNumbers, setPossibleNumbers] = useState([]);
 
     useImperativeHandle(ref, () => ({
@@ -388,7 +388,7 @@ const BotPanel = forwardRef<any, BotPanelProps>(
                     type="text"
                     inputMode="numeric"
                     maxLength={1}
-                    value=""
+                    value={bullsInput}
                     onChange={(e) => setBullsInput(e.target.value)}
                     className="w-12 border rounded text-center bg-black text-white"
                     style={{ borderColor: "#38A3A5" }}
@@ -405,7 +405,7 @@ const BotPanel = forwardRef<any, BotPanelProps>(
                     type="text"
                     inputMode="numeric"
                     maxLength={1}
-                    value=""
+                    value={cowsInput}
                     onChange={(e) => setCowsInput(e.target.value)}
                     className="w-12 border rounded text-center bg-black text-white"
                     style={{ borderColor: "#38A3A5" }}
