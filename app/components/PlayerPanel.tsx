@@ -363,9 +363,6 @@ export default function PlayerPanel({
             </div>
 
             <div className="mt-6 w-full">
-              {/* Display possible combinations count */}
-
-              {/* Guesses history */}
               {guessHistory.length > 0 && (
                 <div
                   className="mt-2 text-sm text-left"

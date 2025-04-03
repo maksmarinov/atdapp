@@ -39,7 +39,6 @@ export default function SlidingMenu() {
 
   return (
     <>
-      {/* Transparent overlay to capture touches outside menu */}
       {isOpen && (
         <div
           className="fixed inset-0 bg-black bg-opacity-30 z-30"

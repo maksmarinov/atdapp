@@ -337,7 +337,6 @@ const BotPanel = forwardRef<any, BotPanelProps>(
         </div>
 
         <div className=" w-full px-4 flex flex-col items-center">
-          {/* Victory message when player wins - Add this section */}
           {playerWon && (
             <div
               className="mb-4 p-2 rounded-lg w-full max-w-md text-center"
@@ -347,7 +346,6 @@ const BotPanel = forwardRef<any, BotPanelProps>(
             </div>
           )}
 
-          {/* Victory message when bot wins */}
           {botWon && (
             <div
               className="mb-4 p-2 rounded-lg w-full max-w-md text-center"
@@ -365,7 +363,6 @@ const BotPanel = forwardRef<any, BotPanelProps>(
             </div>
           )}
 
-          {/* Bot's guess section - only show if bot hasn't won yet */}
           {waitingForResponse && !botWon && !playerWon && !gameOver && (
             <div
               className="mb-2 p-2 rounded-lg w-full max-w-md"
@@ -429,7 +426,6 @@ const BotPanel = forwardRef<any, BotPanelProps>(
             </div>
           )}
 
-          {/* Previous guesses history - only bot guesses */}
           <div
             className="border rounded-md p-2 max-h-96 overflow-y-auto w-full"
             style={{ borderColor: "#38A3A5", backgroundColor: "#22577A10" }}
@@ -460,7 +456,6 @@ const BotPanel = forwardRef<any, BotPanelProps>(
                     <p style={{ color: "#C7F9CC" }}>
                       {response.bulls} {"B"} / {response.cows} {"C"}
                     </p>
-                    {/* Add winning icon next to the last guess that won */}
                     {botWon &&
                       index === playerResponses.length - 1 &&
                       bulls === 4 && (
@@ -477,8 +472,6 @@ const BotPanel = forwardRef<any, BotPanelProps>(
               </div>
             )}
           </div>
-
-          {/* Only show count of possibilities if game still ongoing */}
 
           <div
             className="mt-4 p-3 rounded-lg w-full"
