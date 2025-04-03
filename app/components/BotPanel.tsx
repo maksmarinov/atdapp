@@ -202,8 +202,8 @@ const BotPanel = forwardRef<any, BotPanelProps>(
         setBotWon(true);
         setInvalidResponse(false);
         setWaitingForResponse(false);
-        setBullsInput("0");
-        setCowsInput("0");
+        setBullsInput("");
+        setCowsInput("");
         return;
       }
 
@@ -212,8 +212,8 @@ const BotPanel = forwardRef<any, BotPanelProps>(
       setInvalidResponse(false);
       setWaitingForResponse(false);
 
-      setBullsInput("0");
-      setCowsInput("0");
+      setBullsInput("");
+      setCowsInput("");
     }, [
       bullsInput,
       cowsInput,
@@ -278,8 +278,8 @@ const BotPanel = forwardRef<any, BotPanelProps>(
 
     useEffect(() => {
       if (waitingForResponse) {
-        setBullsInput("0");
-        setCowsInput("0");
+        setBullsInput("");
+        setCowsInput("");
       }
     }, [waitingForResponse]);
 

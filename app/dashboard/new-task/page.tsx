@@ -9,7 +9,7 @@ export default async function CreateTaskPage() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col ml-[4rem] py-12 px-4">
+    <div className="flex min-h-screen flex-col py-2 px-2">
       <div className="w-full max-w-md">
         <h1 className="text-2xl font-bold mb-6 text-center">Create New Task</h1>
         <TaskForm userId={user.id} />
