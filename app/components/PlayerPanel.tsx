@@ -253,6 +253,7 @@ export default function PlayerPanel({
         <div className="w-full max-w-md border-b-2 border-emerald-500 pb-2">
           <input
             type="text"
+            inputMode="numeric"
             maxLength={4}
             value={number}
             onChange={handleChange}

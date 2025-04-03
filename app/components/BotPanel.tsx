@@ -434,11 +434,9 @@ const BotPanel = forwardRef<any, BotPanelProps>(
                     Bulls
                   </label>
                   <input
-                    type="number"
+                    type="text"
                     inputMode="numeric"
-                    min="0"
-                    max="4"
-                    step="1"
+                    maxLength={1}
                     value={bullsInput}
                     onChange={(e) => setBullsInput(e.target.value)}
                     className="w-12 border rounded text-center bg-black text-white"
@@ -453,11 +451,9 @@ const BotPanel = forwardRef<any, BotPanelProps>(
                     Cows
                   </label>
                   <input
-                    type="number"
+                    type="text"
                     inputMode="numeric"
-                    min="0"
-                    max="4"
-                    step="1"
+                    maxLength={1}
                     value={cowsInput}
                     onChange={(e) => setCowsInput(e.target.value)}
                     className="w-12 border rounded text-center bg-black text-white"
