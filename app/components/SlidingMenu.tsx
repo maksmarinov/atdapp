@@ -1,5 +1,5 @@
 "use client";
-
+import { signOut } from "../actions/authenticate";
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -51,7 +51,7 @@ export default function SlidingMenu() {
                 textDecoration: pathname === "/game" ? "none" : "underline",
               }}
             >
-              Play Bulls and Cows
+              Play Bulls&Cows
             </Link>
           </li>
           <li className="font-bold px-2 py-1 rounded-sm">
@@ -66,7 +66,15 @@ export default function SlidingMenu() {
             </Link>
           </li>
         </ul>
-
+        <form action={signOut} className="mt-8">
+          <button
+            type="submit"
+            className="px-4 font-extrabold py-2 rounded-sm hover:opacity-90 transition-colors cursor-pointer"
+            style={{ backgroundColor: "#57CC99", color: "#22577A" }}
+          >
+            Sign Out
+          </button>
+        </form>
         <div
           id="gradientSlide"
           className="absolute top-0 right-0 h-full w-2 gradient-slide z-10"

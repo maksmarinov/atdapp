@@ -45,17 +45,18 @@ body {
 }
 
 .signup-button {
-  margin-left: -10px;
+  
   font-size: x-large;
   position: relative;
   padding: 0.75rem 1.5rem; 
   border-radius: 0.125rem;
   font-weight: bold; 
   border-width: 2px;
-  border-color: #38A3A5;
+  border-radius: 4px;
+  border-color: #38a572;
   color: #C7F9CC; 
   cursor: pointer; 
-  z-index: 1; 
+  
 }
 
 .glow-div {

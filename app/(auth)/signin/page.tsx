@@ -1,14 +1,16 @@
 "use client";
 import Link from "next/link";
+import { useState } from "react";
 import { signIn } from "@/app/actions/authenticate";
 import { toast, Toaster } from "react-hot-toast";
 import { useRouter } from "next/navigation";
 
 export default function SigninPage() {
   const router = useRouter();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-
+    setIsSubmitting(true);
     const form = event.currentTarget as HTMLFormElement;
     const userData = new FormData(form);
 
@@ -52,10 +54,11 @@ export default function SigninPage() {
           id="password"
         />
         <button
-          className="font-bold border-2 px-1 cursor-pointer"
+          className="font-bold border-2 px-1 rounded cursor-pointer"
           type="submit"
+          disabled={isSubmitting}
         >
-          Sign In
+          {isSubmitting ? "Signing In..." : "Sign In"}
         </button>
       </form>
     </div>

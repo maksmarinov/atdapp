@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { useState, useEffect } from "react";
 import { setCookie, getCookie } from "cookies-next";
@@ -6,12 +7,14 @@ interface PlayerPanelProps {
   onPlayerWin: () => void;
   gameOver: boolean;
   botIsWaiting: boolean;
+  onPlayerGuess: (guessData: any) => void; // Add this prop
 }
 
 export default function PlayerPanel({
   onPlayerWin,
   gameOver,
   botIsWaiting,
+  onPlayerGuess,
 }: PlayerPanelProps) {
   const [number, setNumber] = useState("");
   const [isValid, setIsValid] = useState(false);
@@ -224,8 +227,12 @@ export default function PlayerPanel({
         )
       );
 
-      localStorage.setItem("latestGuess", JSON.stringify(guessResult));
       localStorage.setItem("guessHistory", JSON.stringify(updatedHistory));
+
+      // Call the parent callback to notify about the guess
+      if (onPlayerGuess) {
+        onPlayerGuess(guessResult);
+      }
 
       setGuess("");
 
@@ -237,16 +244,13 @@ export default function PlayerPanel({
   };
 
   return (
-    <div
-      className="flex flex-col w-1/2 h-screen border text-center items-center"
-      style={{ borderColor: "#38A3A5" }}
-    >
+    <div className="flex flex-col h-1/4 max-h-screen w-1/2  text-center items-center">
       <div className="text-xl font-semibold py-2" style={{ color: "#57CC99" }}>
-        Your Panel
+        You
       </div>
 
-      <div className="mt-5 relative flex flex-col items-center w-full px-4">
-        <div className="w-full max-w-md">
+      <div className=" relative flex flex-col items-center w-full px-2">
+        <div className="w-full max-w-md border-b-2 border-emerald-500 pb-2">
           <input
             type="text"
             maxLength={4}
@@ -271,26 +275,25 @@ export default function PlayerPanel({
             placeholder="Enter 4 digits"
           />
 
-          {number.length === 4 && !gameStarted && (
-            <span className="ml-2">{isValid ? "✅" : "❌"}</span>
-          )}
-
-          {showTooltip && !gameStarted && (
+          {showTooltip && !gameStarted && number.length != 4 && (
             <div
-              className="absolute mt-2 p-3 rounded-sm shadow-lg z-10 text-sm max-w-xs"
+              className="absolute mt-2 p-2 w-40 rounded-sm shadow-lg z-10 text-sm"
               style={{
                 backgroundColor: "#22577A",
                 borderColor: "#38A3A5",
                 color: "#C7F9CC",
+                opacity: "80%",
                 left: "50%",
                 transform: "translateX(-50%)",
               }}
             >
               <p className="font-bold mb-2">Rules for valid number:</p>
-              <ul className="list-disc pl-5 text-left">
-                <li>Must be exactly 4 digits</li>
-                <li>First digit cannot be 0</li>
-                <li>All digits must be different (no repeats)</li>
+              <ul className="list-disc pl-4 text-left">
+                <li className="mb-2">Must be exactly 4 digits</li>
+                <li className="mb-2">First digit cannot be 0</li>
+                <li className="mb-2">
+                  All digits must be different (no repeats)
+                </li>
               </ul>
             </div>
           )}
@@ -300,12 +303,12 @@ export default function PlayerPanel({
               <button
                 onClick={handlePlay}
                 disabled={!isValid}
-                className="px-6 py-2 rounded-sm"
+                className="px-4 py-2 rounded-sm"
                 style={{
                   backgroundColor: isValid ? "#57CC99" : "#22577A",
                   color: isValid ? "#22577A" : "#80ED99",
                   borderColor: "#38A3A5",
-                  opacity: isValid ? 1 : 0.6,
+                  opacity: isValid ? 1 : 0.4,
                   cursor: isValid ? "pointer" : "not-allowed",
                 }}
               >
@@ -317,12 +320,8 @@ export default function PlayerPanel({
 
         {gameStarted && (
           <div className="mt-4 w-full max-w-md">
-            <p className="text-lg mb-4" style={{ color: "#80ED99" }}>
-              Your number: <span className="font-bold">{number}</span>
-            </p>
-
             <div className="flex flex-col items-center">
-              <div className="flex items-center justify-center w-full">
+              <div className="flex flex-col items-center justify-center w-full">
                 <input
                   type="text"
                   maxLength={4}
@@ -343,16 +342,10 @@ export default function PlayerPanel({
                   placeholder="Guess"
                 />
 
-                {guess.length === 4 && (
-                  <span className="ml-2 inline-block w-6 text-center">
-                    {isGuessValid ? "✅" : "❌"}
-                  </span>
-                )}
-
                 <button
                   onClick={handleGuessSubmit}
                   disabled={!isGuessValid || gameOver || botIsWaiting}
-                  className="ml-4 px-4 py-2 rounded-sm w-24"
+                  className="mt-2 px-4 py-2 text-sm rounded-sm font-bold w-auto"
                   style={{
                     backgroundColor:
                       isGuessValid && !gameOver && !botIsWaiting
@@ -386,8 +379,11 @@ export default function PlayerPanel({
 
               {/* Guesses history */}
               {guessHistory.length > 0 && (
-                <div className="mt-4 text-left" style={{ color: "#C7F9CC" }}>
-                  <h3 className="text-lg font-semibold mb-2">Your guesses:</h3>
+                <div
+                  className="mt-2 text-sm text-left"
+                  style={{ color: "#C7F9CC" }}
+                >
+                  <h3 className="text-sm font-semibold mb-2">Your guesses:</h3>
                   <div
                     className="max-h-72 overflow-y-auto pr-2 border rounded-lg p-3"
                     style={{ borderColor: "#38A3A510" }}
@@ -399,8 +395,7 @@ export default function PlayerPanel({
                         style={{ borderColor: "#38A3A5" }}
                       >
                         <span className="font-bold">{g.number}:</span> {g.bulls}{" "}
-                        {g.bulls === 1 ? "Bull" : "Bulls"}, {g.cows}{" "}
-                        {g.cows === 1 ? "Cow" : "Cows"}
+                        B, {g.cows} C
                         {g.bulls === 4 && (
                           <span className="ml-2 text-yellow-400">🎯</span>
                         )}
@@ -410,12 +405,12 @@ export default function PlayerPanel({
                 </div>
               )}
               <div
-                className="mt-4 p-3 rounded-lg w-full"
+                className="mt-4 p-2 rounded-lg w-full"
                 style={{ backgroundColor: "#22577A10", borderColor: "#38A3A5" }}
               >
                 <div className="flex items-center justify-center">
                   <div
-                    className="px-4 py-2 rounded-lg"
+                    className="px-2 text-sm rounded-lg"
                     style={{ backgroundColor: "#22577A30" }}
                   >
                     <span style={{ color: "#57CC99" }}>

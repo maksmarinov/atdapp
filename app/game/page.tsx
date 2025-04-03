@@ -11,9 +11,11 @@ export default function Game() {
   const [playerWon, setPlayerWon] = useState(false);
   const [botWon, setBotWon] = useState(false);
   const [gameOver, setGameOver] = useState(false);
-  const [isUpdatingScore, setIsUpdatingScore] = useState(false); // Track score update state
+  const [isUpdatingScore, setIsUpdatingScore] = useState(false);
   const scoreUpdated = useRef(false);
-  const [waitingForBotResponse, setWaitingForBotResponse] = useState(false); // Track if bot is waiting for response
+  const [waitingForBotResponse, setWaitingForBotResponse] = useState(false);
+  const botPanelRef = useRef(null);
+  const [latestPlayerGuess, setLatestPlayerGuess] = useState(null);
 
   // Handle player winning
   const handlePlayerWin = () => {
@@ -32,11 +34,25 @@ export default function Game() {
     setWaitingForBotResponse(isWaiting);
   };
 
+  // Handle player guess - this will trigger the bot to make a guess
+  const handlePlayerGuess = (guessData) => {
+    // Store the latest guess for BotPanel
+    setLatestPlayerGuess(guessData);
+
+    // Store in localStorage for game state persistence
+    localStorage.setItem("latestGuess", JSON.stringify(guessData));
+
+    // If game is not over and bot panel exists, trigger bot to make a guess
+    if (!gameOver && botPanelRef.current && !waitingForBotResponse) {
+      botPanelRef.current.makeGuess();
+    }
+  };
+
   // Update score when game ends
   useEffect(() => {
     const updateScore = async () => {
       if (gameOver && (playerWon || botWon) && !scoreUpdated.current) {
-        setIsUpdatingScore(true); // Set loading state true while updating
+        setIsUpdatingScore(true);
         scoreUpdated.current = true;
 
         try {
@@ -49,7 +65,7 @@ export default function Game() {
         } catch (error) {
           console.error("Failed to update score:", error);
         } finally {
-          setIsUpdatingScore(false); // Set loading state back to false
+          setIsUpdatingScore(false);
         }
       }
     };
@@ -65,19 +81,19 @@ export default function Game() {
     localStorage.removeItem("guessHistory");
     localStorage.removeItem("latestGuess");
     localStorage.removeItem("botResponses");
+    localStorage.removeItem("playerPossibilities");
 
     window.location.reload();
   };
 
   return (
-    <div className="min-h-screen">
+    <div className=" min-w-120">
       <SlidingMenu />
       <div className="flex flex-col ml-[4rem] p-6">
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl">Bulls and Cows Game</h1>
           <button
             onClick={handleNewGame}
-            className={`px-6 py-2 ${
+            className={`px-2 py-1 font-bold text-md ${
               isUpdatingScore
                 ? "bg-gray-500 cursor-not-allowed"
                 : "bg-emerald-600 hover:bg-emerald-700 cursor-pointer"
@@ -86,20 +102,25 @@ export default function Game() {
           >
             {isUpdatingScore ? "Updating Score..." : "New Game"}
           </button>
+          <div className="text-white font-extrabold">Bulls&Cows</div>
           <ScoreDisplay />
         </div>
 
-        <div className="bg-neutral-800 p-4 rounded-lg shadow">
+        <div className="bg-neutral-800 p-4 h-1/4 max-h-screen rounded-lg shadow">
           <div className="flex flex-row text-xl mb-4 justify-between">
             <PlayerPanel
               onPlayerWin={handlePlayerWin}
               gameOver={gameOver}
               botIsWaiting={waitingForBotResponse}
+              onPlayerGuess={handlePlayerGuess} // New prop for direct communication
             />
             <BotPanel
+              ref={botPanelRef} // Ref to call methods on the BotPanel
               onBotWin={handleBotWin}
+              onPlayerWin={handlePlayerWin} // Add this
               gameOver={gameOver}
               onWaitingChange={handleBotWaitingChange}
+              latestPlayerGuess={latestPlayerGuess}
             />
           </div>
         </div>

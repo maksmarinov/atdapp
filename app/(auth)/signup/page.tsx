@@ -89,7 +89,7 @@ export default function SignupPage() {
           required
         />
         <button
-          className="font-bold border-2 px-1 cursor-pointer"
+          className="font-bold border-2 rounded px-1 cursor-pointer"
           type="submit"
           disabled={isSubmitting}
         >

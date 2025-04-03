@@ -14,13 +14,13 @@ export default async function Home() {
             </button>
           </Link>
 
-          <div className="mt-5">
+          <div className="mt-5 ">
             <Image
               src="/cow.png"
               alt="cow"
               width={120}
               height={120}
-              className="cow"
+              className="cow pl-5"
             />
           </div>
           <div className="glow-div"></div>

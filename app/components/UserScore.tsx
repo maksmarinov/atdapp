@@ -23,12 +23,16 @@ export default function ScoreDisplay() {
   }, []);
 
   if (loading) {
-    return <div>Loading score...</div>;
+    return (
+      <div className="border rounded-md px-2 border-emerald-600 mx-1 text-center">
+        Loading score...
+      </div>
+    );
   }
 
   return (
-    <div>
-      <h2>Your Score: {score}</h2>
+    <div className="border rounded-md px-2 border-emerald-600 mx-1 text-center">
+      <h2> Score: {score}</h2>
     </div>
   );
 }
