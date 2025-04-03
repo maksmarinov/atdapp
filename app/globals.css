@@ -67,7 +67,7 @@ body {
   background-color: #80ED99; 
   opacity: 0.6; 
   filter: blur(20px); 
-  border-radius: 0.125rem;
+  border-radius: 360%;
 }
 
 .input-field {
