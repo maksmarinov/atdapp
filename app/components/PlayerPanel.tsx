@@ -26,6 +26,22 @@ export default function PlayerPanel({
   const [guessHistory, setGuessHistory] = useState([]);
   const [possibleCombinations, setPossibleCombinations] = useState([]);
 
+  const handleNumberKeyDown = (e) => {
+    if (e.key === "Enter") {
+      if (isValid && !gameStarted) {
+        handlePlay();
+      }
+    }
+  };
+
+  const handleGuessKeyDown = (e) => {
+    if (e.key === "Enter") {
+      if (isGuessValid && !gameOver && !botIsWaiting) {
+        handleGuessSubmit();
+      }
+    }
+  };
+
   useEffect(() => {
     const savedNumber = getCookie("playerNumber");
     const savedComputerNumber = getCookie("computerNumber");
@@ -243,6 +259,7 @@ export default function PlayerPanel({
             maxLength={4}
             value={number}
             onChange={handleChange}
+            onKeyDown={handleNumberKeyDown}
             disabled={gameStarted}
             onFocus={() => setShowTooltip(true)}
             onBlur={() => setShowTooltip(false)}
@@ -315,6 +332,7 @@ export default function PlayerPanel({
                   maxLength={4}
                   value={guess}
                   onChange={handleGuessChange}
+                  onKeyDown={handleGuessKeyDown}
                   disabled={gameOver || botIsWaiting}
                   className="p-2 border rounded-sm w-32 text-center text-xl"
                   style={{

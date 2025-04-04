@@ -6,8 +6,10 @@ import {
   useCallback,
   forwardRef,
   useImperativeHandle,
+  useRef,
 } from "react";
 import { getCookie } from "cookies-next";
+import NumberSelector, { NumberSelectorHandle } from "./NumberSelectors";
 
 interface BotPanelProps {
   onBotWin: () => void;
@@ -37,9 +39,8 @@ const BotPanel = forwardRef<any, BotPanelProps>(
     const [bulls, setBulls] = useState(0);
     const [invalidResponse, setInvalidResponse] = useState(false);
     const [botWon, setBotWon] = useState(false);
-    const [bullsInput, setBullsInput] = useState("");
-    const [cowsInput, setCowsInput] = useState("");
     const [possibleNumbers, setPossibleNumbers] = useState([]);
+    const numberSelectorRef = useRef<NumberSelectorHandle>(null);
 
     useImperativeHandle(ref, () => ({
       makeGuess: () => {
@@ -161,12 +162,12 @@ const BotPanel = forwardRef<any, BotPanelProps>(
     }, [possibleNumbers]);
 
     const handlePlayerResponse = useCallback(() => {
-      const bullsValue = parseInt(bullsInput);
-      const cowsValue = parseInt(cowsInput);
+      if (!numberSelectorRef.current) return;
+
+      const bullsValue = numberSelectorRef.current.getBullsValue();
+      const cowsValue = numberSelectorRef.current.getCowsValue();
 
       if (
-        isNaN(bullsValue) ||
-        isNaN(cowsValue) ||
         bullsValue < 0 ||
         bullsValue > 4 ||
         cowsValue < 0 ||
@@ -202,8 +203,10 @@ const BotPanel = forwardRef<any, BotPanelProps>(
         setBotWon(true);
         setInvalidResponse(false);
         setWaitingForResponse(false);
-        setBullsInput("");
-        setCowsInput("");
+
+        if (numberSelectorRef.current) {
+          numberSelectorRef.current.reset();
+        }
         return;
       }
 
@@ -212,11 +215,10 @@ const BotPanel = forwardRef<any, BotPanelProps>(
       setInvalidResponse(false);
       setWaitingForResponse(false);
 
-      setBullsInput("");
-      setCowsInput("");
+      if (numberSelectorRef.current) {
+        numberSelectorRef.current.reset();
+      }
     }, [
-      bullsInput,
-      cowsInput,
       botGuess,
       validatePlayerResponse,
       updatePossibilities,
@@ -278,8 +280,9 @@ const BotPanel = forwardRef<any, BotPanelProps>(
 
     useEffect(() => {
       if (waitingForResponse) {
-        setBullsInput("");
-        setCowsInput("");
+        if (numberSelectorRef.current) {
+          numberSelectorRef.current.reset();
+        }
       }
     }, [waitingForResponse]);
 
@@ -373,42 +376,7 @@ const BotPanel = forwardRef<any, BotPanelProps>(
                 <span className="underline font-bold">{botGuess}</span>
               </p>
 
-              <div className="flex space-x-4 justify-center mb-2">
-                <div>
-                  <label
-                    className="block text-sm mb-1"
-                    style={{ color: "#C7F9CC" }}
-                  >
-                    Bulls
-                  </label>
-                  <input
-                    type="text"
-                    inputMode="numeric"
-                    maxLength={1}
-                    value={bullsInput}
-                    onChange={(e) => setBullsInput(e.target.value)}
-                    className="w-12 border rounded text-center bg-black text-white"
-                    style={{ borderColor: "#38A3A5" }}
-                  />
-                </div>
-                <div>
-                  <label
-                    className="block text-sm mb-1"
-                    style={{ color: "#C7F9CC" }}
-                  >
-                    Cows
-                  </label>
-                  <input
-                    type="text"
-                    inputMode="numeric"
-                    maxLength={1}
-                    value={cowsInput}
-                    onChange={(e) => setCowsInput(e.target.value)}
-                    className="w-12 border rounded text-center bg-black text-white"
-                    style={{ borderColor: "#38A3A5" }}
-                  />
-                </div>
-              </div>
+              <NumberSelector ref={numberSelectorRef} />
 
               {invalidResponse && (
                 <div className="text-sm font-bold text-red-600 bg-black/50 mb-2 rounded-sm px-1">
@@ -418,7 +386,7 @@ const BotPanel = forwardRef<any, BotPanelProps>(
 
               <button
                 onClick={handlePlayerResponse}
-                className="px-4 py-2 font-bold text-sm rounded text-white"
+                className="px-4 py-2 mt-4 font-bold text-sm rounded text-white"
                 style={{ backgroundColor: "#38A3A5" }}
               >
                 Submit
