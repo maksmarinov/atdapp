@@ -128,7 +128,7 @@ export default function Task({ task }: TaskProps) {
               className={`cursor-pointer text-sm px-2 py-1 rounded appearance-none ${
                 task.status === TaskStatus.COMPLETED
                   ? "bg-black/70"
-                  : "bg-emerald-600/70"
+                  : "bg-green-900/70"
               }`}
             >
               <option value={TaskStatus.IN_PROGRESS}>In Progress</option>
@@ -144,7 +144,7 @@ export default function Task({ task }: TaskProps) {
           </button>
           <button
             onClick={() => setShowDeleteModal(true)}
-            className="cursor-pointer bg-red-800/40 text-sm px-2 py-1 rounded hover:bg-red-700/70"
+            className="cursor-pointer bg-black/90 text-sm px-2 py-1 rounded hover:bg-red-700/70"
           >
             Delete
           </button>

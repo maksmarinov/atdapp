@@ -79,26 +79,26 @@ export default function Game() {
   };
 
   return (
-    <div className=" min-w-100">
+    <div className=" min-w-100 h-screen bg-linear-to-tr from-black to-neutral-300/10 ">
       <SlidingMenu />
       <div className="flex flex-col ml-[2rem] p-6">
         <div className="flex justify-between items-center mb-6">
           <button
             onClick={handleNewGame}
-            className={`px-2 py-1 font-bold text-md ${
+            className={`px-2 py-1 font-bold text-md  text-black ${
               isUpdatingScore
                 ? "bg-gray-500 cursor-not-allowed"
-                : "bg-emerald-600 hover:bg-emerald-700 cursor-pointer"
-            } rounded text-white`}
+                : "bg-white hover:bg-lime-400 cursor-pointer"
+            } rounded`}
             disabled={isUpdatingScore}
           >
-            {isUpdatingScore ? "Updating Score..." : "New Game"}
+            New Game
           </button>
           <div className="text-white font-extrabold">Bulls&Cows</div>
           <ScoreDisplay />
         </div>
 
-        <div className="bg-neutral-800  p-2 h-1/4 max-h-screen rounded-lg shadow">
+        <div className="bg-neutral-800/40 p-2 h-1/4 max-h-screen rounded-lg shadow">
           <div className="flex flex-row text-xl mb-4 justify-between">
             <PlayerPanel
               onPlayerWin={handlePlayerWin}

@@ -14,7 +14,7 @@ export default async function DashboardLayout({
   }
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-linear-to-bl from-lime-500/10 to-black">
       <SlidingMenu />
 
       <div className="flex flex-col min-h-screen w-full max-w-10/12 ml-[4rem] pt-10">

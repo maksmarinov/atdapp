@@ -35,7 +35,7 @@ export default function SigninPage() {
 
       <form
         onSubmit={handleSubmit}
-        className="flex flex-col border-2 rounded-xl border-emerald-900 p-4"
+        className="flex flex-col border-2 rounded-xl border-lime-500 p-4"
       >
         Email
         <input

@@ -50,8 +50,7 @@ export default function SlidingMenu() {
       <button
         ref={buttonRef}
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed top-5 text-2xl font-extrabold left-1 z-50 bg-neutral-900 py-1 px-2 cursor-pointer rounded-sm"
-        style={{ color: "#80ED99" }}
+        className="fixed top-5 text-2xl font-extrabold left-1 z-50 bg-neutral-900/40 py-1 px-2 cursor-pointer rounded-sm"
         aria-label={isOpen ? "Close menu" : "Open menu"}
         aria-expanded={isOpen}
       >
@@ -60,23 +59,18 @@ export default function SlidingMenu() {
 
       <div
         ref={menuRef}
-        className={`fixed top-0 left-0 h-screen w-64 bg-neutral-900 p-10 transform transition-transform duration-300 ease-in-out ${
+        className={`fixed top-0 left-0 h-screen w-64 bg-neutral-900/90 p-10 transform transition-transform duration-300 ease-in-out ${
           isOpen ? "translate-x-0" : "-translate-x-8/10"
         } z-40`}
       >
-        <div
-          className="py-10 font-extrabold text-6xl mb-8"
-          style={{ color: "#C7F9CC" }}
-        >
-          menu
-        </div>
+        <div className="py-10 font-extrabold text-6xl mb-8">menu</div>
 
         <ul className="space-y-4" style={{ color: "#C7F9CC" }}>
           <li className="font-bold px-2 py-1 rounded-sm">
             <Link
               href="/dashboard"
               style={{
-                color: pathname === "/dashboard" ? "#57CC99" : "#C7F9CC",
+                color: pathname === "/dashboard" ? "#2bff00" : "#ffffff",
                 textDecoration:
                   pathname === "/dashboard" ? "none" : "underline",
               }}
@@ -89,7 +83,7 @@ export default function SlidingMenu() {
             <Link
               href="/game"
               style={{
-                color: pathname === "/game" ? "#57CC99" : "#C7F9CC",
+                color: pathname === "/game" ? "#2bff00" : "#ffffff",
                 textDecoration: pathname === "/game" ? "none" : "underline",
               }}
               onClick={() => setIsOpen(false)}
@@ -101,7 +95,7 @@ export default function SlidingMenu() {
             <Link
               href="/profile"
               style={{
-                color: pathname === "/profile" ? "#57CC99" : "#C7F9CC",
+                color: pathname === "/profile" ? "#2bff00" : "#ffffff",
                 textDecoration: pathname === "/profile" ? "none" : "underline",
               }}
               onClick={() => setIsOpen(false)}
@@ -113,8 +107,7 @@ export default function SlidingMenu() {
         <form action={signOut} className="mt-8">
           <button
             type="submit"
-            className="px-4 font-extrabold py-2 rounded-sm hover:opacity-90 transition-colors cursor-pointer"
-            style={{ backgroundColor: "#57CC99", color: "#22577A" }}
+            className="px-4 font-extrabold py-2 bg-black rounded-sm hover:opacity-90 transition-colors cursor-pointer"
           >
             Sign Out
           </button>

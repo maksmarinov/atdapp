@@ -13,7 +13,7 @@ export default async function TaskList() {
     return (
       <div className="w-full">
         <h3 className="text-xl font-medium mb-4">Your Tasks</h3>
-        <div className="bg-neutral-800 rounded-lg shadow-lg p-4 text-gray-400">
+        <div className="bg-neutral-800 rounded-lg p-4 text-gray-400">
           No tasks found. Create a new task to get started!
         </div>
       </div>
@@ -22,7 +22,7 @@ export default async function TaskList() {
 
   return (
     <div className="w-full">
-      <div className="bg-neutral-800 rounded-lg shadow-lg p-4">
+      <div className="bg-neutral-800/40 rounded-lg p-4">
         <ul className="divide-y divide-neutral-950">
           {userTasks.map((task) => (
             <li key={task.id} className="py-3">

@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export default async function Home() {
   return (
-    <div className="flex h-screen w-full items-center justify-center">
+    <div className="flex h-screen w-full items-center justify-center bg-linear-to-bl from-cyan-500/40 to-black rounded ">
       <div className="text-center text-white">
         <h1 className="mb-10 text-6xl">ANOTHER TO DO APP...BUT</h1>
         <div className="mb-10 text-xl">You can play bulls and cows!</div>

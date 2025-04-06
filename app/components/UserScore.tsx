@@ -24,14 +24,14 @@ export default function ScoreDisplay() {
 
   if (loading) {
     return (
-      <div className="border rounded-md px-2 border-emerald-600 mx-1 text-center">
+      <div className="border-2 rounded-md px-2 border-lime-500/50 mx-1 text-center">
         Loading score...
       </div>
     );
   }
 
   return (
-    <div className="border rounded-md px-2 border-emerald-600 mx-1 text-center">
+    <div className="border-2 rounded-md px-2 border-lime-500/50 mx-1 text-center">
       <h2> Score: {score}</h2>
     </div>
   );

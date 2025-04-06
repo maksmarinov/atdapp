@@ -58,13 +58,13 @@ export default function TaskForm({
   }
 
   return (
-    <div className="w-full max-w-md mx-auto bg-neutral-800 rounded-lg shadow p-6">
+    <div className="w-full max-w-md mx-auto bg-neutral-800/60 rounded-lg shadow p-6">
       <h2 className="text-xl font-bold mb-6">
         {isEditing ? "Edit Task" : "Create New Task"}
       </h2>
 
       {showSuccess && (
-        <div className="bg-green-900/50 border border-green-600 text-white px-4 py-2 rounded mb-4">
+        <div className="bg-neutral-900/50 border border-neutral-600 text-white px-4 py-2 rounded mb-4">
           {state.message}
         </div>
       )}
@@ -166,7 +166,7 @@ export default function TaskForm({
           <button
             type="submit"
             disabled={isPending}
-            className="px-4 py-2 bg-green-800 text-white rounded hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-4 py-2 bg-neutral-800/60 text-white rounded hover:bg-neutral-700 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isPending
               ? "Submitting..."

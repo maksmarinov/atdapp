@@ -28,7 +28,7 @@ body {
 .cow {
   position: relative; 
   left: 50%;
-  filter: drop-shadow(0 0 3px #57CC99);
+  filter: drop-shadow(0 0 3px white);
   animation: cowJourney 4s ease-in-out infinite;
 }
 
@@ -53,8 +53,8 @@ body {
   font-weight: bold; 
   border-width: 2px;
   border-radius: 4px;
-  border-color: #38a572;
-  color: #C7F9CC; 
+  border-color: #2bff00;
+  color: white; 
   cursor: pointer; 
   
 }
@@ -64,7 +64,7 @@ body {
   top: 100%;
   width: 40%; 
   height: 25%; 
-  background-color: #80ED99; 
+  background-color: #2bff00; 
   opacity: 0.6; 
   filter: blur(20px); 
   border-radius: 360%;
@@ -75,17 +75,17 @@ body {
   padding: 0.125rem;
   border-radius: 0.125rem;
   border-width: 1px;
-  border-color: #38A3A5;
-  background-color: #22577A;
-  color: #C7F9CC;
+  border-color: white;
+  background-color: black;
+  color: white;
   font-weight: 300;
   margin-bottom: 1.5rem;
 }
 
 .gradient-slide {
-  background: linear-gradient(180deg, #38A3A5, #22577A, #57CC99, #22577A, #38A3A5);
+  background: linear-gradient(360deg, #2bff00,#222222, #0a0a0a,#222222, #2bff00);
   background-size: 100% 200%; 
-  filter: blur(1px); 
+ 
   border-radius: 0.125rem; 
   animation: gradientMoveVertical 8s linear infinite;
 }
@@ -93,10 +93,4 @@ body {
 @keyframes gradientMoveVertical {
   0% { background-position: 50% 0%; }
   100% { background-position: 50% 200%; }
-}
-
-.button-hover:hover {
-  opacity: 1;
-  color: #C7F9CC;
-  border-radius: 0.125rem;
 }

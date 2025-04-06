@@ -247,12 +247,10 @@ export default function PlayerPanel({
 
   return (
     <div className="flex flex-col h-1/4 max-h-screen w-1/2  text-center items-center">
-      <div className="text-xl font-semibold py-2" style={{ color: "#57CC99" }}>
-        You
-      </div>
+      <div className="text-xl font-semibold py-2">You</div>
 
       <div className=" relative flex flex-col items-center w-full px-2">
-        <div className="w-full max-w-md border-b-2 border-emerald-500 pb-2">
+        <div className="w-full max-w-md border-b-2 pb-2">
           <input
             type="text"
             inputMode="numeric"
@@ -266,33 +264,20 @@ export default function PlayerPanel({
             onMouseEnter={() => setShowTooltip(true)}
             onMouseLeave={() => setShowTooltip(false)}
             className="p-2 border rounded-sm w-32 text-center text-xl"
-            style={{
-              backgroundColor: "#22577A",
-              color: "#C7F9CC",
-              borderColor:
-                number.length === 4
-                  ? isValid
-                    ? "#57CC99"
-                    : "#80ED99"
-                  : "#38A3A5",
-            }}
             placeholder="Enter 4 digits"
           />
 
           {showTooltip && !gameStarted && number.length != 4 && (
             <div
-              className="absolute mt-2 p-2 w-40 rounded-sm shadow-lg z-10 text-sm"
+              className="absolute mt-2 p-2 w-40 rounded-sm shadow-lg z-10 text-sm bg-black/80"
               style={{
-                backgroundColor: "#22577A",
-                borderColor: "#38A3A5",
-                color: "#C7F9CC",
                 opacity: "80%",
                 left: "50%",
                 transform: "translateX(-50%)",
               }}
             >
-              <p className="font-bold mb-2">Rules for valid number:</p>
-              <ul className="list-disc pl-4 text-left">
+              <p className="font-bold mb-2 ">Rules for valid number:</p>
+              <ul className="list-disc pl-4 text-left  font-bold">
                 <li className="mb-2">Must be exactly 4 digits</li>
                 <li className="mb-2">First digit cannot be 0</li>
                 <li className="mb-2">
@@ -309,9 +294,8 @@ export default function PlayerPanel({
                 disabled={!isValid}
                 className="px-4 py-2 rounded-sm"
                 style={{
-                  backgroundColor: isValid ? "#57CC99" : "#22577A",
-                  color: isValid ? "#22577A" : "#80ED99",
-                  borderColor: "#38A3A5",
+                  backgroundColor: isValid ? "white" : "black",
+                  color: isValid ? "black" : "white",
                   opacity: isValid ? 1 : 0.4,
                   cursor: isValid ? "pointer" : "not-allowed",
                 }}
@@ -334,18 +318,14 @@ export default function PlayerPanel({
                   onChange={handleGuessChange}
                   onKeyDown={handleGuessKeyDown}
                   disabled={gameOver || botIsWaiting}
-                  className="p-2 border rounded-sm w-32 text-center text-xl"
-                  style={{
-                    backgroundColor: "#22577A",
-                    color: "#C7F9CC",
-                    borderColor:
-                      guess.length === 4
-                        ? isGuessValid
-                          ? "#57CC99"
-                          : "#80ED99"
-                        : "#38A3A5",
-                  }}
-                  placeholder="Guess"
+                  className={`p-2 border rounded-sm w-32 text-center text-xl ${
+                    guess.length === 4
+                      ? isGuessValid
+                        ? "bg-lime-400/80  text-black"
+                        : "bg-red-500/40"
+                      : "white"
+                  }
+                  placeholder="Guess"`}
                 />
 
                 <button
@@ -353,13 +333,10 @@ export default function PlayerPanel({
                   disabled={!isGuessValid || gameOver || botIsWaiting}
                   className="mt-2 px-2 py-2 text-sm rounded-sm font-bold w-auto"
                   style={{
-                    backgroundColor:
-                      isGuessValid && !gameOver && !botIsWaiting
-                        ? "#38A3A5"
-                        : "#22577A",
-                    color: "#C7F9CC",
+                    backgroundColor: "lime",
+                    color: "black",
                     opacity:
-                      isGuessValid && !gameOver && !botIsWaiting ? 1 : 0.6,
+                      isGuessValid && !gameOver && !botIsWaiting ? 0.9 : 0.6,
                     cursor:
                       isGuessValid && !gameOver && !botIsWaiting
                         ? "pointer"
@@ -372,8 +349,8 @@ export default function PlayerPanel({
 
               {botIsWaiting && !gameOver && (
                 <div
-                  className="mt-2 text-sm w-full text-center"
-                  style={{ color: "#80ED99" }}
+                  className="mt-2 text-sm w-full text-left bg-violet-500/50 rounded p-1"
+                  style={{ color: "black" }}
                 >
                   Please respond to the computer&apos;s guess first
                 </div>
@@ -384,18 +361,18 @@ export default function PlayerPanel({
               {guessHistory.length > 0 && (
                 <div
                   className="mt-2 text-sm text-left"
-                  style={{ color: "#C7F9CC" }}
+                  style={{ color: "white" }}
                 >
                   <h3 className="text-sm font-semibold mb-2">Your guesses:</h3>
                   <div
-                    className="max-h-72 overflow-y-auto pr-2 border rounded-lg"
-                    style={{ borderColor: "#38A3A510" }}
+                    className="max-h-72 overflow-y-auto pr-2  rounded-lg"
+                    style={{ borderColor: "lime10" }}
                   >
                     {guessHistory.map((g, index) => (
                       <div
                         key={index}
                         className="mb-2 pb-2 border-b border-opacity-30"
-                        style={{ borderColor: "#38A3A5" }}
+                        style={{ borderColor: "lime" }}
                       >
                         <span className="font-bold">{g.number}:</span> {g.bulls}{" "}
                         B, {g.cows} C
@@ -407,19 +384,11 @@ export default function PlayerPanel({
                   </div>
                 </div>
               )}
-              <div
-                className="mt-4 p-2 rounded-lg w-full"
-                style={{ backgroundColor: "#22577A10", borderColor: "#38A3A5" }}
-              >
+              <div className="mt-4 p-2 rounded-lg w-full">
                 <div className="flex items-center justify-center">
-                  <div
-                    className="px-2 text-sm rounded-lg"
-                    style={{ backgroundColor: "#22577A30" }}
-                  >
-                    <span style={{ color: "#57CC99" }}>
-                      Possible combinations:{" "}
-                    </span>
-                    <span className="font-bold" style={{ color: "#38A3A5" }}>
+                  <div className="px-2 text-sm rounded-lg">
+                    <span>Possible combinations: </span>
+                    <span className="font-bold" style={{ color: "lime" }}>
                       {possibleCombinations.length}
                     </span>
                   </div>

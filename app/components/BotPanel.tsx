@@ -328,32 +328,18 @@ const BotPanel = forwardRef<any, BotPanelProps>(
     ]);
 
     return (
-      <div
-        className="flex flex-col w-1/2 h-1/4 max-h-screen border-l text-center items-center"
-        style={{ borderColor: "#38A3A5" }}
-      >
-        <div
-          className="text-md font-semibold py-2"
-          style={{ color: "#57CC99" }}
-        >
-          bot
-        </div>
+      <div className="flex flex-col w-1/2 h-1/4 max-h-screen border-l text-center items-center">
+        <div className="text-md font-semibold py-2">bot</div>
 
         <div className=" w-full px-4 flex flex-col items-center">
           {playerWon && (
-            <div
-              className="mb-4 p-2 rounded-lg w-full max-w-md text-center"
-              style={{ backgroundColor: "#80ED99", color: "#22577A" }}
-            >
+            <div className="mb-4 p-2 rounded-lg w-full max-w-md text-center">
               <p className="text-md font-bold">You WON!</p>
             </div>
           )}
 
           {botWon && (
-            <div
-              className="mb-4 p-2 rounded-lg w-full max-w-md text-center"
-              style={{ backgroundColor: "#57CC99", color: "#22577A" }}
-            >
+            <div className="mb-4 p-2 rounded-lg w-full max-w-md text-center">
               <p className="text-md font-bold mb-2">
                 I&apos;ve guessed your number!
               </p>
@@ -367,11 +353,8 @@ const BotPanel = forwardRef<any, BotPanelProps>(
           )}
 
           {waitingForResponse && !botWon && !playerWon && !gameOver && (
-            <div
-              className="mb-2 p-2 rounded-lg w-full max-w-md"
-              style={{ backgroundColor: "#22577A" }}
-            >
-              <p className="mb-2" style={{ color: "#C7F9CC" }}>
+            <div className="mb-2 p-2 rounded-lg w-full max-w-md">
+              <p className="mb-2">
                 My guess is:{" "}
                 <span className="underline font-bold">{botGuess}</span>
               </p>
@@ -386,26 +369,19 @@ const BotPanel = forwardRef<any, BotPanelProps>(
 
               <button
                 onClick={handlePlayerResponse}
-                className="px-4 py-2 mt-4 font-bold text-sm rounded text-white"
-                style={{ backgroundColor: "#38A3A5" }}
+                className="px-4 py-2 mt-4 font-bold text-sm rounded text-white border-2"
               >
                 Submit
               </button>
             </div>
           )}
 
-          <div
-            className="border rounded-md p-2 max-h-96 overflow-y-auto w-full"
-            style={{ borderColor: "#38A3A5", backgroundColor: "#22577A10" }}
-          >
+          <div className="text-left rounded-md p-2 max-h-96 overflow-y-auto w-full">
             {!waitingForResponse && botGuesses.length === 0 && !playerWon ? (
-              <p style={{ color: "#57CC99" }}>Waiting for user...</p>
+              <p>Waiting for user...</p>
             ) : (
               <div>
-                <h3
-                  className="text-sm font-semibold mb-2"
-                  style={{ color: "#57CC99" }}
-                >
+                <h3 className="text-sm font-semibold mb-2">
                   {playerWon
                     ? "Game over "
                     : botWon
@@ -415,13 +391,11 @@ const BotPanel = forwardRef<any, BotPanelProps>(
                 {playerResponses.map((response, index) => (
                   <div
                     key={`bot-${index}`}
-                    className="mb-2 pb-2 border-b text-sm border-opacity-20"
-                    style={{ borderColor: "#38A3A5" }}
+                    className="mb-2 p-1 border-b text-sm border-opacity-20 "
+                    style={{ borderColor: "lime" }}
                   >
-                    <p className="font-bold mb-1" style={{ color: "#80ED99" }}>
-                      {response.guess}
-                    </p>
-                    <p style={{ color: "#C7F9CC" }}>
+                    <p className="font-bold mb-1">{response.guess}</p>
+                    <p>
                       {response.bulls} {"B"} / {response.cows} {"C"}
                     </p>
                     {botWon &&
@@ -441,22 +415,14 @@ const BotPanel = forwardRef<any, BotPanelProps>(
             )}
           </div>
 
-          <div
-            className="mt-4 p-3 rounded-lg w-full"
-            style={{
-              backgroundColor: "#22577A10",
-              borderColor: "#38A3A5",
-            }}
-          >
+          <div className="mt-4 p-3 rounded-lg w-full">
             <div className="flex items-center justify-center">
-              <div
-                className="px-2 text-sm rounded-lg"
-                style={{ backgroundColor: "#22577A30" }}
-              >
-                <span style={{ color: "#57CC99" }}>
-                  Possible combinations:{" "}
-                </span>
-                <span className="font-bold" style={{ color: "#38A3A5" }}>
+              <div className="px-2 text-sm rounded-lg">
+                <span>Possible combinations: </span>
+                <span
+                  className="font-bold drop-shadow-lg shadow-amber-300"
+                  style={{ color: "lime" }}
+                >
                   {possibleNumbers.length}
                 </span>
               </div>

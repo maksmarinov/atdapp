@@ -45,7 +45,7 @@ export default function SignupPage() {
       </div>
 
       <form
-        className="flex flex-col border-2 rounded-xl border-emerald-900 p-4"
+        className="flex flex-col border-2 rounded-xl border-lime-500 p-4"
         onSubmit={handleSubmit}
       >
         Email
@@ -89,7 +89,7 @@ export default function SignupPage() {
           required
         />
         <button
-          className="font-bold border-2 rounded px-1 cursor-pointer"
+          className="font-bold border-2 rounded px-1 cursor-pointer "
           type="submit"
           disabled={isSubmitting}
         >
