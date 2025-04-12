@@ -89,10 +89,11 @@ export async function getTask(id: number) {
   }
 }
 export async function getAllTasks() {
-  "use cache";
-  cacheTag("tasks");
+ 
   try {
     const currentUser = await getCurrentUser();
+    if (!currentUser) return null;
+    
     const result = await prisma.task.findMany({
       where: {
         userId: currentUser.id,
