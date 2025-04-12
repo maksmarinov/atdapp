@@ -96,9 +96,6 @@ export async function getAllTasks() {
       include: {
         user: true,
       },
-      orderBy: {
-        createdAt: "desc",
-      },
     });
     return result;
   } catch (error) {
